@@ -3,8 +3,7 @@ from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import RedirectResponse
-from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse, RedirectResponse
 
 from .db import init_db
 from .routers import admin, merchants, users, webhooks
@@ -38,9 +37,19 @@ def health():
     return {"status": "ok"}
 
 
-if PROTOTYPE_DIR.exists():
-    app.mount("/app", StaticFiles(directory=PROTOTYPE_DIR, html=True), name="app")
+_SKELETON = (
+    '<!doctype html><html lang="es"><head><meta charset="utf-8">'
+    '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">'
+    "<style>body{margin:0}[hidden]{display:none!important}</style></head><body>{content}</body></html>"
+)
 
-    @app.get("/", include_in_schema=False)
-    def root():
-        return RedirectResponse("/app/")
+
+@app.get("/app/", response_class=HTMLResponse, include_in_schema=False)
+def prototype():
+    """Prototipo de la app. El HTML es un fragmento (también se publica como artifact), así que se envuelve aquí."""
+    return _SKELETON.replace("{content}", (PROTOTYPE_DIR / "index.html").read_text(encoding="utf-8"))
+
+
+@app.get("/", include_in_schema=False)
+def root():
+    return RedirectResponse("/app/")

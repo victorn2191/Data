@@ -135,7 +135,7 @@ class Transaction(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
     card_id: Mapped[int] = mapped_column(ForeignKey("linked_cards.id"))
     amount_cents: Mapped[int] = mapped_column(Integer)  # negativo = devolución
-    currency: Mapped[str] = mapped_column(String(3), default="EUR")
+    currency: Mapped[str] = mapped_column(String(3), default="NIO")
     booked_at: Mapped[datetime]
     raw_descriptor: Mapped[str] = mapped_column(String(200))
     mcc: Mapped[str | None] = mapped_column(String(4), default=None)
@@ -203,7 +203,7 @@ class PayoutBatch(Base):
 
 
 class MerchantPayment(Base):
-    """Cobro al comercio (p. ej. adeudo SEPA mensual)."""
+    """Cobro al comercio (débito o transferencia mensual en córdobas)."""
 
     __tablename__ = "merchant_payments"
     id: Mapped[int] = mapped_column(primary_key=True)

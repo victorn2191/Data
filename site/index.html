@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>FuturoYa</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="FuturoYa convierte tus compras en comercios adheridos en ahorro para tu jubilación. Sin cambiar de banco y sin escanear tickets.">
+<meta name="description" content="FuturoYa convierte tus compras en comercios adheridos en ahorro para tu jubilación, en córdobas. Sin cambiar de banco y sin escanear facturas.">
 <meta property="og:title" content="FuturoYa · Tus compras de hoy, tu pensión de mañana">
-<meta property="og:description" content="Cada compra con tu tarjeta en un comercio adherido suma a tu plan de pensiones.">
+<meta property="og:description" content="Cada compra con tu tarjeta en un comercio adherido suma a tu ahorro para el retiro.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap">
@@ -119,7 +119,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .tag { font: 500 10px/1 var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); border: 1px solid var(--line); border-radius: 99px; padding: 5px 8px; background: var(--surface); }
 .vault { background: var(--pine); color: var(--on-pine); border-radius: 22px; padding: 18px; display: grid; gap: 12px; position: relative; overflow: hidden; }
 .vault .eyebrow { color: inherit; opacity: .75; font-size: 10.5px; }
-.vault .total { font: 700 38px/1 var(--display); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.vault .total { font: 700 34px/1 var(--display); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
 .vault .total small { font-size: 21px; opacity: .8; }
 .bar { display: flex; height: 9px; border-radius: 99px; overflow: hidden; gap: 2px; }
 .bar span { display: block; height: 100%; }
@@ -139,6 +139,10 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .item .amt { text-align: right; display: grid; gap: 4px; justify-items: end; }
 .avatar { width: 36px; height: 36px; border-radius: 11px; display: grid; place-items: center; font: 700 14px/1 var(--display); background: var(--coin-soft); color: var(--ink); }
 .plus { font: 500 14px/1 var(--mono); color: var(--pine); }
+.usd { font: 400 11px/1.25 var(--mono); color: var(--muted); }
+.vault .usd { color: inherit; opacity: .75; font-size: 10px; }
+.usd-big { font: 500 11.5px/1.2 var(--mono); opacity: .8; margin-top: -6px; }
+.stat .usd { font-size: 12.5px; }
 .pill { font: 500 10px/1 var(--mono); text-transform: uppercase; letter-spacing: .05em; padding: 4px 7px; border-radius: 99px; white-space: nowrap; }
 .pill.PENDING { color: var(--pending); background: var(--pending-bg); }
 .pill.CONFIRMED { color: var(--confirmed); background: var(--confirmed-bg); }
@@ -261,19 +265,19 @@ footer .row { display: flex; flex-wrap: wrap; gap: 12px 28px; justify-content: s
       <div class="hero-copy">
         <span class="eyebrow">Ahorro para la jubilación por consumo</span>
         <h1>Tus compras de hoy, <em>tu pensión</em> de mañana.</h1>
-        <p class="lead">Paga con tu tarjeta de siempre en los comercios adheridos y una parte de cada compra va a tu plan de pensiones. Lo pone el comercio, no tú.</p>
+        <p class="lead">Paga con tu tarjeta de siempre en los comercios adheridos y una parte de cada compra va a tu plan de ahorro para el retiro. Lo pone el comercio, no tú.</p>
         <div class="hero-actions">
           <a class="btn coin" href="#unete">Quiero mi FuturoYa</a>
           <a class="btn ghost" href="app/">Probar la app</a>
         </div>
         <div class="trust">
           <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5 10 17l9-10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Gratis para ti</span>
-          <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5 10 17l9-10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Con cualquier banco español</span>
-          <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5 10 17l9-10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Sin escanear tickets</span>
+          <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5 10 17l9-10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Con tu banco de siempre</span>
+          <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5 10 17l9-10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Sin escanear facturas</span>
         </div>
       </div>
 
-      <div class="phone" role="img" aria-label="Pantalla de inicio de la app FuturoYa con un saldo de ejemplo de 68,53 euros">
+      <div class="phone" role="img" aria-label="Pantalla de inicio de la app FuturoYa con un saldo de ejemplo de 2,542.40 córdobas, unos 68.53 dólares">
         <div class="phone-top">
           <span class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="9" width="24" height="19" rx="7" fill="var(--pine)"/><rect x="12" y="11.5" width="8" height="2.4" rx="1.2" fill="var(--bg)"/><circle cx="16" cy="5.5" r="4.2" fill="var(--coin)"/></svg><span>Futuro<span class="ya">Ya</span></span></span>
           <span class="tag">Ejemplo</span>
@@ -281,22 +285,23 @@ footer .row { display: flex; flex-wrap: wrap; gap: 12px 28px; justify-content: s
         <div class="vault">
           <div class="coin-drop"></div>
           <span class="eyebrow">Tu hucha para la jubilación</span>
-          <div class="total">68<small>,53 €</small></div>
+          <div class="total">C$ 2,542<small>.40</small></div>
+          <span class="usd-big">≈ US$ 68.53 · tasa C$ 37.10 por US$ 1</span>
           <div class="bar">
-            <span style="flex-grow:43.82;background:var(--on-pine)"></span>
-            <span style="flex-grow:6.78;background:var(--coin)"></span>
-            <span style="flex-grow:17.93;background:rgb(255 255 255 / .45)"></span>
+            <span style="flex-grow:1625.70;background:var(--on-pine)"></span>
+            <span style="flex-grow:251.50;background:var(--coin)"></span>
+            <span style="flex-grow:665.20;background:rgb(255 255 255 / .45)"></span>
           </div>
           <div class="legend">
-            <div><span><i class="dot" style="background:var(--on-pine)"></i>En tu plan</span><b>43,82 €</b></div>
-            <div><span><i class="dot" style="background:var(--coin)"></i>Confirmado</span><b>6,78 €</b></div>
-            <div><span><i class="dot" style="background:rgb(255 255 255 / .55)"></i>Pendiente</span><b>17,93 €</b></div>
+            <div><span><i class="dot" style="background:var(--on-pine)"></i>En tu plan</span><b>C$ 1,625.70</b><span class="usd">≈ US$ 43.82</span></div>
+            <div><span><i class="dot" style="background:var(--coin)"></i>Confirmado</span><b>C$ 251.50</b><span class="usd">≈ US$ 6.78</span></div>
+            <div><span><i class="dot" style="background:rgb(255 255 255 / .55)"></i>Pendiente</span><b>C$ 665.20</b><span class="usd">≈ US$ 17.93</span></div>
           </div>
         </div>
         <div class="list">
-          <div class="item"><span class="avatar">FL</span><span class="txt"><span class="name">Frutería La Huerta</span><span class="sub num">48,11 € · firme en 30 días</span></span><span class="amt"><span class="plus">+2,40 €</span><span class="pill PENDING">Pendiente</span></span></div>
-          <div class="item"><span class="avatar">ÓV</span><span class="txt"><span class="name">Óptica Visión</span><span class="sub num">59,55 € · 2 sept</span></span><span class="amt"><span class="plus">+3,57 €</span><span class="pill CONFIRMED">Confirmada</span></span></div>
-          <div class="item"><span class="avatar">LC</span><span class="txt"><span class="name">Librería Cervantes</span><span class="sub num">32,90 € · 14 ago</span></span><span class="amt"><span class="plus">+1,31 €</span><span class="pill INVESTED">En tu plan</span></span></div>
+          <div class="item"><span class="avatar">FC</span><span class="txt"><span class="name">Frutería La Cosecha</span><span class="sub num">C$ 1,785.00 · firme en 30 días</span></span><span class="amt"><span class="plus">+C$ 89.25</span><span class="pill PENDING">Pendiente</span></span></div>
+          <div class="item"><span class="avatar">ÓV</span><span class="txt"><span class="name">Óptica Visión</span><span class="sub num">C$ 2,209.00 · 2 sept</span></span><span class="amt"><span class="plus">+C$ 132.54</span><span class="pill CONFIRMED">Confirmada</span></span></div>
+          <div class="item"><span class="avatar">LG</span><span class="txt"><span class="name">Librería El Güegüense</span><span class="sub num">C$ 1,220.50 · 14 ago</span></span><span class="amt"><span class="plus">+C$ 48.82</span><span class="pill INVESTED">En tu plan</span></span></div>
         </div>
         <div class="phone-tabs" aria-hidden="true"><b>Inicio</b><span>Comercios</span><span>Movimientos</span><span>Futuro</span><span>Perfil</span></div>
       </div>
@@ -305,8 +310,8 @@ footer .row { display: flex; flex-wrap: wrap; gap: 12px 28px; justify-content: s
 
   <div class="split">
     <div class="wrap">
-      <div class="fig"><span class="eyebrow">Compras 100 € en un comercio al 5 %</span><span class="big num">+5,00 €</span><p>van a tu plan de pensiones</p></div>
-      <div class="fig"><span class="eyebrow">Tu esfuerzo extra</span><span class="big num">0,00 €</span><p>pagas lo mismo de siempre</p></div>
+      <div class="fig"><span class="eyebrow">Compras C$ 1,000 en un comercio al 5 %</span><span class="big num">+C$ 50.00</span><p>≈ US$ 1.35 van a tu plan de ahorro</p></div>
+      <div class="fig"><span class="eyebrow">Tu esfuerzo extra</span><span class="big num">C$ 0.00</span><p>pagas lo mismo de siempre</p></div>
       <div class="fig"><span class="eyebrow">Plazo de seguridad</span><span class="big num">30 días</span><p>por si devuelves la compra</p></div>
     </div>
   </div>
@@ -316,13 +321,13 @@ footer .row { display: flex; flex-wrap: wrap; gap: 12px 28px; justify-content: s
       <div class="section-head">
         <span class="eyebrow">Cómo funciona</span>
         <h2>Cuatro pasos, y tú solo das el primero</h2>
-        <p>Después de vincular tu tarjeta, todo pasa solo. En la app ves en qué punto está cada euro.</p>
+        <p>Después de vincular tu tarjeta, todo pasa solo. En la app ves en qué punto está cada córdoba.</p>
       </div>
       <div class="steps">
-        <article class="step"><span class="n">Paso 1</span><h3>Vincula tu tarjeta</h3><p>Das permiso para leer tus compras con la normativa europea de pagos (PSD2). No guardamos el número completo.</p></article>
+        <article class="step"><span class="n">Paso 1</span><h3>Vincula tu tarjeta</h3><p>Das permiso para leer tus compras, solo en modo lectura. Nunca guardamos el número completo de tu tarjeta.</p></article>
         <article class="step"><span class="n">Paso 2</span><span class="pill PENDING">Pendiente</span><h3>Compra como siempre</h3><p>Al pagar en un comercio adherido, la aportación aparece en tu app al momento.</p></article>
         <article class="step"><span class="n">Paso 3</span><span class="pill CONFIRMED">Confirmada</span><h3>Pasan 30 días</h3><p>Si no devuelves la compra, la aportación es firme y el comercio paga su parte.</p></article>
-        <article class="step"><span class="n">Paso 4</span><span class="pill INVESTED">En tu plan</span><h3>Llega a tu plan</h3><p>Cada mes enviamos tus aportaciones a la gestora, que las invierte en tu plan de pensiones.</p></article>
+        <article class="step"><span class="n">Paso 4</span><span class="pill INVESTED">En tu plan</span><h3>Llega a tu plan</h3><p>Cada mes enviamos tus aportaciones a la entidad administradora, que las invierte en tu plan de ahorro para el retiro.</p></article>
       </div>
     </div>
   </section>
@@ -342,16 +347,16 @@ footer .row { display: flex; flex-wrap: wrap; gap: 12px 28px; justify-content: s
         <div class="calc">
           <span class="eyebrow">Calcula tu aportación</span>
           <div class="field">
-            <div class="row"><label for="spend">Gasto mensual en comercios adheridos</label><output id="spend-out" class="num">300 €</output></div>
-            <input type="range" id="spend" min="50" max="1500" step="25" value="300">
+            <div class="row"><label for="spend">Gasto mensual en comercios adheridos</label><output id="spend-out" class="num"></output></div>
+            <input type="range" id="spend" min="1000" max="50000" step="500" value="10000">
           </div>
           <div class="field">
             <div class="row"><label for="rate">Porcentaje medio</label><output id="rate-out" class="num">4 %</output></div>
             <input type="range" id="rate" min="1" max="6" step="0.5" value="4">
           </div>
           <div class="calc-out">
-            <div class="stat"><span class="eyebrow">Al mes</span><b id="per-month">12,00 €</b></div>
-            <div class="stat"><span class="eyebrow">Al año</span><b id="per-year">144,00 €</b></div>
+            <div class="stat"><span class="eyebrow">Al mes</span><b id="per-month"></b><span class="usd" id="per-month-usd"></span></div>
+            <div class="stat"><span class="eyebrow">Al año</span><b id="per-year"></b><span class="usd" id="per-year-usd"></span></div>
           </div>
         </div>
       </div>
@@ -367,14 +372,14 @@ footer .row { display: flex; flex-wrap: wrap; gap: 12px 28px; justify-content: s
       </div>
       <div class="sim">
         <div class="controls">
-          <div class="field"><div class="row"><label for="sim-monthly">Aportación mensual por compras</label><output id="o-monthly" class="num"></output></div><input type="range" id="sim-monthly" min="0" max="100" step="1" value="15"></div>
+          <div class="field"><div class="row"><label for="sim-monthly">Aportación mensual por compras</label><output id="o-monthly" class="num"></output></div><input type="range" id="sim-monthly" min="0" max="5000" step="50" value="500"></div>
           <div class="field"><div class="row"><label for="sim-years">Años hasta la jubilación</label><output id="o-years" class="num"></output></div><input type="range" id="sim-years" min="5" max="45" step="1" value="25"></div>
           <div class="field"><div class="row"><label for="sim-ret">Rentabilidad anual</label><output id="o-ret" class="num"></output></div><input type="range" id="sim-ret" min="0" max="7" step="0.5" value="3"></div>
           <div class="calc-out">
-            <div class="stat"><span class="eyebrow" id="o-label">En 25 años</span><b id="o-value"></b></div>
-            <div class="stat"><span class="eyebrow">Aportado</span><b id="o-paid"></b></div>
+            <div class="stat"><span class="eyebrow" id="o-label">En 25 años</span><b id="o-value"></b><span class="usd" id="o-value-usd"></span></div>
+            <div class="stat"><span class="eyebrow">Aportado</span><b id="o-paid"></b><span class="usd" id="o-paid-usd"></span></div>
           </div>
-          <p class="muted" style="font-size:13px">Estimación con interés compuesto mensual. La rentabilidad pasada no garantiza la futura.</p>
+          <p class="muted" style="font-size:13px">Estimación con interés compuesto mensual. Dólares a tasa de C$ 37.10 por US$ 1. La rentabilidad pasada no garantiza la futura.</p>
         </div>
         <div class="chart">
           <div id="chart"></div>
@@ -393,20 +398,22 @@ footer .row { display: flex; flex-wrap: wrap; gap: 12px 28px; justify-content: s
         </div>
         <ul class="benefits">
           <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5 10 17l9-10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Pago por resultado</b>Sin cuotas fijas. Pagas un porcentaje de las ventas que te traemos.</span></li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5 10 17l9-10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Sin cambiar tu TPV</b>Detectamos la compra por la tarjeta del cliente. No instalas nada.</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5 10 17l9-10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Sin cambiar tu POS</b>Detectamos la compra por la tarjeta del cliente. No instalas nada.</span></li>
           <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5 10 17l9-10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Devoluciones descontadas</b>Si el cliente devuelve la compra en 30 días, no pagas nada por ella.</span></li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5 10 17l9-10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Un cobro al mes</b>Una sola domiciliación SEPA con el detalle de cada venta.</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5 10 17l9-10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Un cobro al mes</b>Un solo débito o transferencia en córdobas, con el detalle de cada venta.</span></li>
         </ul>
         <div><a class="btn" href="#unete" data-role="comercio">Adherir mi comercio</a></div>
       </div>
-      <div class="receipt" aria-label="Ejemplo de reparto de una venta de 100 euros">
-        <div class="line"><span>Venta con tarjeta</span><span>100,00 €</span></div>
+      <div class="receipt" aria-label="Ejemplo de reparto de una venta de 1,000 córdobas">
+        <div class="line"><span>Venta con tarjeta</span><span>C$ 1,000.00</span></div>
+        <div class="line muted"><span>Equivalente</span><span>≈ US$ 26.95</span></div>
         <hr>
         <div class="line"><span>Oferta del comercio</span><span>6,50 %</span></div>
-        <div class="line tot"><span>→ Plan del cliente</span><span>5,00 €</span></div>
-        <div class="line"><span>→ Servicio FuturoYa</span><span>1,50 €</span></div>
+        <div class="line tot"><span>→ Plan del cliente</span><span>C$ 50.00</span></div>
+        <div class="line"><span>→ Servicio FuturoYa</span><span>C$ 15.00</span></div>
         <hr>
-        <div class="line"><span>Cobro al comercio</span><span>6,50 €</span></div>
+        <div class="line"><span>Cobro al comercio</span><span>C$ 65.00</span></div>
+        <div class="line muted"><span>Equivalente</span><span>≈ US$ 1.75</span></div>
         <span class="muted" style="font-size:12px">Ejemplo ilustrativo. El porcentaje lo acuerda cada comercio.</span>
       </div>
     </div>
@@ -416,11 +423,11 @@ footer .row { display: flex; flex-wrap: wrap; gap: 12px 28px; justify-content: s
     <div class="wrap">
       <div class="section-head"><span class="eyebrow">Preguntas frecuentes</span><h2>Lo que nos preguntan</h2></div>
       <div class="faq">
-        <details open><summary>¿Cuánto me cuesta?</summary><p>Nada. La aportación la paga el comercio donde compras. Tú pagas el mismo precio de siempre.</p></details>
-        <details><summary>¿Dónde está mi dinero?</summary><p>En un plan de pensiones a tu nombre, gestionado por una entidad gestora autorizada y supervisada por la Dirección General de Seguros y Fondos de Pensiones. FuturoYa no custodia tu ahorro.</p></details>
-        <details><summary>¿Cuándo puedo sacarlo?</summary><p>Como en cualquier plan de pensiones: al jubilarte, en los supuestos excepcionales que marca la ley (por ejemplo, desempleo de larga duración o enfermedad grave) y, para aportaciones con más de 10 años de antigüedad, cuando quieras.</p></details>
-        <details><summary>¿Es seguro vincular mi tarjeta?</summary><p>Usamos un proveedor autorizado por el Banco de España bajo la normativa PSD2. Solo leemos tus compras, nunca podemos mover dinero, y puedes retirar el permiso cuando quieras desde la app.</p></details>
-        <details><summary>¿Necesito cambiar de banco?</summary><p>No. Funciona con las tarjetas de los principales bancos españoles.</p></details>
+        <details open><summary>¿Cuánto me cuesta?</summary><p>Nada. La aportación la paga el comercio donde compras. Tú pagas el mismo precio de siempre, en córdobas.</p></details>
+        <details><summary>¿Dónde está mi dinero?</summary><p>En un plan de ahorro para el retiro a tu nombre, administrado por una entidad financiera autorizada y supervisada en Nicaragua. FuturoYa no custodia tu ahorro. Tu saldo se lleva en córdobas y la app te muestra su equivalente en dólares.</p></details>
+        <details><summary>¿Cuándo puedo sacarlo?</summary><p>Al jubilarte, o antes en los casos que establezcan las condiciones del plan. Te las mostraremos con claridad antes de que te des de alta.</p></details>
+        <details><summary>¿Es seguro vincular mi tarjeta?</summary><p>Solo leemos tus compras, nunca podemos mover dinero, y puedes retirar el permiso cuando quieras desde la app. No guardamos el número completo de tu tarjeta.</p></details>
+        <details><summary>¿Necesito cambiar de banco?</summary><p>No. Funciona con las tarjetas de los principales bancos de Nicaragua.</p></details>
       </div>
     </div>
   </section>
@@ -430,7 +437,7 @@ footer .row { display: flex; flex-wrap: wrap; gap: 12px 28px; justify-content: s
       <div style="display:grid;gap:16px">
         <span class="eyebrow" style="color:inherit;opacity:.75">Lista de espera</span>
         <h2>Empieza a construir tu futuro, ya.</h2>
-        <p>Estamos abriendo FuturoYa por barrios. Déjanos tu email y te avisamos cuando llegue al tuyo.</p>
+        <p>Estamos abriendo FuturoYa por departamentos. Déjanos tu email y te avisamos cuando llegue al tuyo.</p>
       </div>
       <form id="waitlist" novalidate>
         <div class="seg" role="radiogroup" aria-label="Me interesa como">
@@ -438,7 +445,7 @@ footer .row { display: flex; flex-wrap: wrap; gap: 12px 28px; justify-content: s
           <label><input type="radio" name="role" id="role-comercio" value="comercio"><span>Tengo un comercio</span></label>
         </div>
         <div class="field"><label for="w-email">Email</label><input type="email" id="w-email" name="email" placeholder="tu@email.com" autocomplete="email" required></div>
-        <div class="field"><label for="w-cp">Código postal</label><input type="text" id="w-cp" name="cp" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" placeholder="50001" required></div>
+        <div class="field"><label for="w-cp">Departamento</label><select id="w-cp" name="departamento" required><option value="">Elige tu departamento</option><option>Managua</option><option>León</option><option>Granada</option><option>Masaya</option><option>Chinandega</option><option>Estelí</option><option>Matagalpa</option><option>Jinotega</option><option>Carazo</option><option>Rivas</option><option>Nueva Segovia</option><option>Madriz</option><option>Boaco</option><option>Chontales</option><option>Río San Juan</option><option>Costa Caribe Norte</option><option>Costa Caribe Sur</option></select></div>
         <button class="btn coin" type="submit">Avisadme</button>
         <p class="form-msg" id="form-msg" role="status" hidden></p>
       </form>
@@ -452,7 +459,7 @@ footer .row { display: flex; flex-wrap: wrap; gap: 12px 28px; justify-content: s
       <a class="brand" href="#inicio" style="font-size:18px"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="9" width="24" height="19" rx="7" fill="var(--pine)"/><rect x="12" y="11.5" width="8" height="2.4" rx="1.2" fill="var(--bg)"/><circle cx="16" cy="5.5" r="4.2" fill="var(--coin)"/></svg><span>Futuro<span class="ya">Ya</span></span></a>
       <span>© <span id="year">2026</span> FuturoYa · futuroya.com</span>
     </div>
-    <p>Proyecto en fase piloto. Los importes, porcentajes y comercios de esta página son ejemplos. Antes de contratar, consulta el documento de datos fundamentales del plan de pensiones.</p>
+    <p>Proyecto en fase piloto. Los importes, porcentajes y comercios de esta página son ejemplos. Importes en córdobas (C$); equivalentes en dólares a tasa de C$ 37.10 por US$ 1. Antes de darte de alta, revisa las condiciones del plan de ahorro.</p>
   </div>
 </footer>
 
@@ -462,19 +469,22 @@ footer .row { display: flex; flex-wrap: wrap; gap: 12px 28px; justify-content: s
    Vacío = el formulario solo valida y muestra un aviso. */
 const WAITLIST_ENDPOINT = "";
 
-const eur = new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" });
-const eur0 = new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
+/* Moneda: córdobas (NIO) con su equivalente en dólares a tasa fija */
+const USD_RATE = 37.10; // C$ por cada US$ 1
+const num = (v, d) => v.toLocaleString("es-NI", { minimumFractionDigits: d, maximumFractionDigits: d });
+const nio = (v, d = 2) => `C$ ${num(v, d)}`;
+const usd = (v, d = 2) => `≈ US$ ${num(v / USD_RATE, d)}`;
 const $ = id => document.getElementById(id);
 $("year").textContent = new Date().getFullYear();
 
 /* Comercios de ejemplo (los mismos del prototipo) */
 const SHOPS = [
-  { name: "Óptica Visión", cat: "Salud", pct: 6, addr: "Pº Independencia 20, Zaragoza" },
-  { name: "Frutería La Huerta", cat: "Alimentación", pct: 5, addr: "C/ Alfonso I 12, Zaragoza" },
-  { name: "Librería Cervantes", cat: "Cultura", pct: 4, addr: "C/ Don Jaime 5, Zaragoza" },
-  { name: "Deportes Moncayo", cat: "Deporte", pct: 3.5, addr: "C/ Delicias 40, Zaragoza" },
-  { name: "Café del Mercado", cat: "Restauración", pct: 3, addr: "Pl. Lanuza 1, Zaragoza" },
-  { name: "Supermercado Ebro", cat: "Alimentación", pct: 1.5, addr: "Av. Goya 30, Zaragoza" },
+  { name: "Óptica Visión", cat: "Salud", pct: 6, addr: "Carretera a Masaya, Managua" },
+  { name: "Frutería La Cosecha", cat: "Alimentación", pct: 5, addr: "Altamira, Managua" },
+  { name: "Librería El Güegüense", cat: "Cultura", pct: 4, addr: "Los Robles, Managua" },
+  { name: "Deportes Momotombo", cat: "Deporte", pct: 3.5, addr: "Centro, León" },
+  { name: "Café del Mercado", cat: "Restauración", pct: 3, addr: "Calle La Calzada, Granada" },
+  { name: "Supermercado Xolotlán", cat: "Alimentación", pct: 1.5, addr: "Bolonia, Managua" },
 ];
 let cat = null;
 const initials = n => n.split(" ").filter(w => w.length > 2 || /^[A-ZÁÉÍÓÚ]/.test(w)).slice(0, 2).map(w => w[0]).join("").toUpperCase();
@@ -485,7 +495,7 @@ function renderShops() {
   $("shop-list").innerHTML = SHOPS.filter(s => !cat || s.cat === cat).map(s => `<div class="item">
     <span class="avatar" aria-hidden="true">${initials(s.name)}</span>
     <span class="txt"><span class="name">${s.name}</span><span class="sub">${s.addr}</span></span>
-    <span class="amt"><span class="pct">${s.pct.toLocaleString("es-ES")} %</span><span class="sub">para tu plan</span></span></div>`).join("");
+    <span class="amt"><span class="pct">${s.pct.toLocaleString("es-NI")} %</span><span class="sub">para tu plan</span></span></div>`).join("");
 }
 $("chips").addEventListener("click", e => {
   const b = e.target.closest("[data-cat]");
@@ -496,11 +506,13 @@ renderShops();
 /* Calculadora de aportación */
 function renderCalc() {
   const spend = +$("spend").value, rate = +$("rate").value;
-  $("spend-out").textContent = eur0.format(spend);
-  $("rate-out").textContent = rate.toLocaleString("es-ES") + " %";
+  $("spend-out").textContent = nio(spend, 0);
+  $("rate-out").textContent = rate.toLocaleString("es-NI") + " %";
   const m = spend * rate / 100;
-  $("per-month").textContent = eur.format(m);
-  $("per-year").textContent = eur.format(m * 12);
+  $("per-month").textContent = nio(m);
+  $("per-month-usd").textContent = usd(m);
+  $("per-year").textContent = nio(m * 12);
+  $("per-year-usd").textContent = usd(m * 12);
 }
 ["spend", "rate"].forEach(id => $(id).addEventListener("input", renderCalc));
 renderCalc();
@@ -521,7 +533,7 @@ function niceStep(max) {
   return [1, 2, 2.5, 5, 10].map(f => f * mag).find(s => s >= raw);
 }
 function chartSvg(pts) {
-  const W = 560, H = 300, L = 62, R = 30, T = 12, B = 28;
+  const W = 560, H = 300, L = 84, R = 30, T = 12, B = 28;
   const maxV = Math.max(...pts.map(p => p.value), 1);
   const step = niceStep(maxV), top = Math.ceil(maxV / step) * step;
   const years = pts[pts.length - 1].y;
@@ -530,11 +542,11 @@ function chartSvg(pts) {
   const line = k => pts.map((p, i) => `${i ? "L" : "M"}${x(p.y).toFixed(1)},${yv(p[k]).toFixed(1)}`).join("");
   let grid = "";
   for (let v = 0; v <= top + 1e-6; v += step)
-    grid += `<line x1="${L}" x2="${W - R}" y1="${yv(v)}" y2="${yv(v)}" stroke="var(--line)"/><text x="${L - 8}" y="${yv(v) + 4}" text-anchor="end">${eur0.format(v)}</text>`;
+    grid += `<line x1="${L}" x2="${W - R}" y1="${yv(v)}" y2="${yv(v)}" stroke="var(--line)"/><text x="${L - 8}" y="${yv(v) + 4}" text-anchor="end">${nio(v, 0)}</text>`;
   const ys = years <= 10 ? 2 : years <= 30 ? 5 : 10;
   for (let y = 0; y <= years; y += ys) grid += `<text x="${x(y)}" y="${H - 8}" text-anchor="middle">${y} años</text>`;
   const last = pts[pts.length - 1];
-  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Proyección del ahorro a ${years} años: ${eur0.format(last.value)}">
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Proyección del ahorro a ${years} años: ${nio(last.value, 0)}, ${usd(last.value, 0)}">
     ${grid}
     <path d="${line("value")}L${x(years)},${yv(0)}L${x(0)},${yv(0)}Z" fill="var(--pine-soft)"/>
     <path d="${line("value")}" fill="none" stroke="var(--pine)" stroke-width="3"/>
@@ -545,12 +557,14 @@ function chartSvg(pts) {
 function renderSim() {
   const monthly = +$("sim-monthly").value, years = +$("sim-years").value, ret = +$("sim-ret").value;
   const pts = project(monthly, years, ret), last = pts[pts.length - 1];
-  $("o-monthly").textContent = eur0.format(monthly);
+  $("o-monthly").textContent = `${nio(monthly, 0)} (${usd(monthly).slice(2)})`;
   $("o-years").textContent = years;
-  $("o-ret").textContent = ret.toLocaleString("es-ES") + " %";
+  $("o-ret").textContent = ret.toLocaleString("es-NI") + " %";
   $("o-label").textContent = `En ${years} años`;
-  $("o-value").textContent = eur0.format(last.value);
-  $("o-paid").textContent = eur0.format(last.paid);
+  $("o-value").textContent = nio(last.value, 0);
+  $("o-value-usd").textContent = usd(last.value, 0);
+  $("o-paid").textContent = nio(last.paid, 0);
+  $("o-paid-usd").textContent = usd(last.paid, 0);
   $("chart").innerHTML = chartSvg(pts);
 }
 ["sim-monthly", "sim-years", "sim-ret"].forEach(id => $(id).addEventListener("input", renderSim));
@@ -566,7 +580,7 @@ $("waitlist").addEventListener("submit", async e => {
   const email = $("w-email"), cp = $("w-cp");
   msg.hidden = false;
   if (!email.checkValidity()) { msg.textContent = "Revisa el email: falta la @ o el dominio."; email.focus(); return; }
-  if (!/^\d{5}$/.test(cp.value)) { msg.textContent = "El código postal tiene 5 cifras, por ejemplo 50001."; cp.focus(); return; }
+  if (!cp.value) { msg.textContent = "Elige tu departamento para avisarte cuando lleguemos."; cp.focus(); return; }
   const data = Object.fromEntries(new FormData(form));
   if (!WAITLIST_ENDPOINT) {
     msg.textContent = "La lista de espera abre muy pronto. Vuelve en unos días para apuntarte.";
@@ -576,7 +590,7 @@ $("waitlist").addEventListener("submit", async e => {
     const r = await fetch(WAITLIST_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(data) });
     if (!r.ok) throw new Error();
     form.reset();
-    msg.textContent = data.role === "comercio" ? "Recibido. Te escribiremos para adherir tu comercio." : "¡Apuntado! Te avisaremos cuando FuturoYa llegue a tu barrio.";
+    msg.textContent = data.role === "comercio" ? "Recibido. Te escribiremos para adherir tu comercio." : "¡Apuntado! Te avisaremos cuando FuturoYa llegue a tu departamento.";
   } catch {
     msg.textContent = "No hemos podido guardar tus datos. Inténtalo de nuevo en unos minutos.";
   }

@@ -55,10 +55,15 @@ class CardOut(ORM):
 
 
 class SummaryOut(BaseModel):
+    """Importes en centavos de córdoba, con el total equivalente en centavos de dólar."""
+
+    currency: str = "NIO"
+    usd_rate: float
     pending_cents: int
     confirmed_cents: int
     invested_cents: int
     total_cents: int
+    total_usd_cents: int
     rewards_count: int
 
 
@@ -67,6 +72,7 @@ class RewardOut(BaseModel):
     merchant: str
     purchase_cents: int
     user_amount_cents: int
+    user_amount_usd_cents: int
     status: str
     booked_at: datetime
 
@@ -77,6 +83,8 @@ class ProjectionOut(BaseModel):
     annual_return_pct: float
     contributed_cents: int
     projected_cents: int
+    projected_usd_cents: int
+    usd_rate: float
 
 
 # --- Comercios ---
@@ -148,7 +156,7 @@ class TransactionWebhookIn(BaseModel):
     external_id: str
     card_token: str
     amount_cents: int  # negativo = devolución
-    currency: str = "EUR"
+    currency: str = "NIO"
     booked_at: datetime
     descriptor: str
     mcc: str | None = None

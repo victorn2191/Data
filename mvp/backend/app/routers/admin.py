@@ -24,7 +24,7 @@ def run_confirm(now: datetime | None = None, db: Session = Depends(get_db)):
 
 @router.get("/merchants/{merchant_id}/statement")
 def merchant_statement(merchant_id: int, db: Session = Depends(get_db)):
-    """Importe que hay que cobrar al comercio (base para la factura / adeudo SEPA)."""
+    """Importe que hay que cobrar al comercio (base para la factura y el cobro mensual)."""
     merchant = db.get(Merchant, merchant_id)
     if merchant is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Comercio no encontrado")

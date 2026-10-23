@@ -117,6 +117,9 @@ p { margin: 0; }
 .item .amt { text-align: right; display: grid; gap: 4px; justify-items: end; }
 .avatar { width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center; font: 700 15px/1 var(--display); background: var(--coin-soft); color: var(--ink); }
 .plus { font: 500 15px/1 var(--mono); color: var(--pine); }
+.usd { font: 400 11px/1.2 var(--mono); color: var(--muted); }
+.vault .usd { color: inherit; opacity: .75; }
+.usd-big { font: 500 12.5px/1.2 var(--mono); opacity: .8; margin-top: -6px; }
 .pill { font: 500 10.5px/1 var(--mono); text-transform: uppercase; letter-spacing: .05em; padding: 4px 7px; border-radius: 99px; white-space: nowrap; }
 .pill.PENDING { color: var(--pending); background: var(--pending-bg); }
 .pill.CONFIRMED { color: var(--confirmed); background: var(--confirmed-bg); }
@@ -191,22 +194,26 @@ nav.tabs button[aria-current="page"] { color: var(--pine); font-weight: 600; }
 
 <script>
 "use strict";
-const eur = new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" });
-const fmt = c => eur.format(c / 100);
-const fmtShort = c => new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(c / 100);
-const dateFmt = new Intl.DateTimeFormat("es-ES", { day: "numeric", month: "short" });
+/* Moneda: córdobas (NIO), con su equivalente en dólares a tasa fija. Importes en centavos. */
+const USD_RATE = 37.10; // C$ por cada US$ 1
+const num = (v, d) => v.toLocaleString("es-NI", { minimumFractionDigits: d, maximumFractionDigits: d });
+const fmt = (c, d = 2) => `C$ ${num(c / 100, d)}`;
+const fmtShort = c => fmt(c, 0);
+const fmtUsd = (c, d = 2) => `US$ ${num(c / 100 / USD_RATE, d)}`;
+const usdTag = (c, d = 2) => `<span class="usd">≈ ${fmtUsd(c, d)}</span>`;
+const dateFmt = new Intl.DateTimeFormat("es-NI", { day: "numeric", month: "short" });
 const esc = s => String(s).replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
 const STATUS = { PENDING: "Pendiente", CONFIRMED: "Confirmada", INVESTED: "En tu plan", REVERSED: "Anulada" };
 const HOLD_DAYS = 30;
 
 /* ---------- Modo demo: datos de ejemplo en memoria (mismo modelo que el backend) ---------- */
 const DEMO_MERCHANTS = [
-  { id: 1, name: "Frutería La Huerta", category: "alimentación", user_bps: 500, platform_bps: 150, address: "C/ Alfonso I 12, Zaragoza" },
-  { id: 2, name: "Librería Cervantes", category: "cultura", user_bps: 400, platform_bps: 100, address: "C/ Don Jaime 5, Zaragoza" },
-  { id: 3, name: "Óptica Visión", category: "salud", user_bps: 600, platform_bps: 200, address: "Pº Independencia 20, Zaragoza" },
-  { id: 4, name: "Café del Mercado", category: "restauración", user_bps: 300, platform_bps: 100, address: "Pl. Lanuza 1, Zaragoza" },
-  { id: 5, name: "Deportes Moncayo", category: "deporte", user_bps: 350, platform_bps: 100, address: "C/ Delicias 40, Zaragoza" },
-  { id: 6, name: "Supermercado Ebro", category: "alimentación", user_bps: 150, platform_bps: 50, address: "Av. Goya 30, Zaragoza" },
+  { id: 1, name: "Frutería La Cosecha", category: "alimentación", user_bps: 500, platform_bps: 150, address: "Altamira, Managua" },
+  { id: 2, name: "Librería El Güegüense", category: "cultura", user_bps: 400, platform_bps: 100, address: "Los Robles, Managua" },
+  { id: 3, name: "Óptica Visión", category: "salud", user_bps: 600, platform_bps: 200, address: "Carretera a Masaya, Managua" },
+  { id: 4, name: "Café del Mercado", category: "restauración", user_bps: 300, platform_bps: 100, address: "Calle La Calzada, Granada" },
+  { id: 5, name: "Deportes Momotombo", category: "deporte", user_bps: 350, platform_bps: 100, address: "Centro, León" },
+  { id: 6, name: "Supermercado Xolotlán", category: "alimentación", user_bps: 150, platform_bps: 50, address: "Bolonia, Managua" },
 ];
 
 function demoBackend() {
@@ -224,7 +231,7 @@ function demoBackend() {
   // Historial de ejemplo: 4 meses de compras
   for (let i = 0; i < 38; i++) {
     const m = DEMO_MERCHANTS[Math.floor(rand() * DEMO_MERCHANTS.length)];
-    addPurchase(m, 800 + Math.floor(rand() * 8200), clock - Math.floor(rand() * 120) * 864e5 - Math.floor(rand() * 20) * 36e5);
+    addPurchase(m, 30000 + Math.floor(rand() * 300000), clock - Math.floor(rand() * 120) * 864e5 - Math.floor(rand() * 20) * 36e5);
   }
   const settle = () => {
     for (const r of rewards) {
@@ -238,7 +245,7 @@ function demoBackend() {
   return {
     mode: "Demo",
     user: { name: "Lucía (ejemplo)", email: "demo@futuroya.com" },
-    cards: [{ id: 1, brand: "VISA", last4: "4242", provider: "demo-psd2", status: "ACTIVE" }],
+    cards: [{ id: 1, brand: "VISA", last4: "4242", provider: "demo-banca-abierta", status: "ACTIVE" }],
     account: { provider: "Gestora de ejemplo", external_account_id: "PP-DEMO0001" },
     async summary() {
       const s = { pending_cents: 0, confirmed_cents: 0, invested_cents: 0, rewards_count: 0 };
@@ -256,7 +263,7 @@ function demoBackend() {
     },
     async simulatePurchase() {
       const m = DEMO_MERCHANTS[Math.floor(rand() * DEMO_MERCHANTS.length)];
-      return addPurchase(m, 1500 + Math.floor(rand() * 6000), clock);
+      return addPurchase(m, 50000 + Math.floor(rand() * 200000), clock);
     },
     async advanceDays(days) { clock += days * 864e5; settle(); },
     now: () => clock,
@@ -285,7 +292,7 @@ function apiBackend(token) {
 }
 
 /* ---------- Estado de la interfaz ---------- */
-const state = { tab: "home", category: null, backend: null, sim: { monthly: 1500, years: 25, ret: 3 } };
+const state = { tab: "home", category: null, backend: null, sim: { monthly: 50000, years: 25, ret: 3 } };
 const $main = document.getElementById("main");
 const $tabs = document.getElementById("tabs");
 
@@ -320,10 +327,10 @@ const initials = name => name.replace(/[^A-Za-zÁÉÍÓÚÑáéíóúñ ]/g, "")
 const daysLeft = r => Math.max(0, Math.ceil(HOLD_DAYS - (state.backend.now() - new Date(r.booked_at)) / 864e5));
 
 function rewardItem(r) {
-  const sub = r.status === "PENDING" ? `${fmt(r.purchase_cents)} · firme en ${daysLeft(r)} días` : `${fmt(r.purchase_cents)} · ${dateFmt.format(new Date(r.booked_at))}`;
+  const sub = r.status === "PENDING" ? `${fmt(r.purchase_cents)} · firme en ${daysLeft(r)} d` : `${fmt(r.purchase_cents)} · ${dateFmt.format(new Date(r.booked_at))}`;
   return `<div class="item"><span class="avatar" aria-hidden="true">${esc(initials(r.merchant))}</span>
     <span class="txt"><span class="name">${esc(r.merchant)}</span><span class="sub num">${sub}</span></span>
-    <span class="amt"><span class="plus">${r.status === "REVERSED" ? "0,00 €" : "+" + fmt(r.user_amount_cents)}</span><span class="pill ${r.status}">${STATUS[r.status]}</span></span></div>`;
+    <span class="amt"><span class="plus">${r.status === "REVERSED" ? fmt(0) : "+" + fmt(r.user_amount_cents)}</span><span class="pill ${r.status}">${STATUS[r.status]}</span></span></div>`;
 }
 
 /* ---------- Pantallas ---------- */
@@ -333,26 +340,27 @@ async function screenHome() {
   const monthStart = new Date(b.now()); monthStart.setDate(1); monthStart.setHours(0, 0, 0, 0);
   const thisMonth = rewards.filter(r => new Date(r.booked_at) >= monthStart && r.status !== "REVERSED");
   const monthCents = thisMonth.reduce((a, r) => a + r.user_amount_cents, 0);
-  const [euros, cents] = fmt(s.total_cents).split(",");
+  const [whole, cents] = fmt(s.total_cents).split(".");
   const part = v => Math.max(v, 0.0001);
   return `<section class="screen">
     <div class="vault">
       <div class="coin-drop" id="coin"></div>
       <span class="eyebrow">Tu hucha para la jubilación</span>
-      <div class="total">${euros}<small>,${cents}</small></div>
+      <div class="total">${whole}<small>.${cents}</small></div>
+      <span class="usd-big">≈ ${fmtUsd(s.total_cents)} · tasa C$ ${num(USD_RATE, 2)} por US$ 1</span>
       <div class="bar" role="img" aria-label="Reparto del saldo por estado">
         <span style="flex-grow:${part(s.invested_cents)};background:var(--on-pine)"></span>
         <span style="flex-grow:${part(s.confirmed_cents)};background:var(--coin)"></span>
         <span style="flex-grow:${part(s.pending_cents)};background:rgb(255 255 255 / .45)"></span>
       </div>
       <div class="legend">
-        <div><span><i class="dot" style="background:var(--on-pine)"></i>En tu plan</span><b>${fmt(s.invested_cents)}</b></div>
-        <div><span><i class="dot" style="background:var(--coin)"></i>Confirmado</span><b>${fmt(s.confirmed_cents)}</b></div>
-        <div><span><i class="dot" style="background:rgb(255 255 255 / .55)"></i>Pendiente</span><b>${fmt(s.pending_cents)}</b></div>
+        <div><span><i class="dot" style="background:var(--on-pine)"></i>En tu plan</span><b>${fmt(s.invested_cents)}</b>${usdTag(s.invested_cents)}</div>
+        <div><span><i class="dot" style="background:var(--coin)"></i>Confirmado</span><b>${fmt(s.confirmed_cents)}</b>${usdTag(s.confirmed_cents)}</div>
+        <div><span><i class="dot" style="background:rgb(255 255 255 / .55)"></i>Pendiente</span><b>${fmt(s.pending_cents)}</b>${usdTag(s.pending_cents)}</div>
       </div>
     </div>
     <div class="stats">
-      <div class="stat"><span class="eyebrow">Este mes</span><b>${fmt(monthCents)}</b><span class="muted" style="font-size:12px">${thisMonth.length} compras</span></div>
+      <div class="stat"><span class="eyebrow">Este mes</span><b>${fmt(monthCents)}</b><span class="muted" style="font-size:12px">${fmtUsd(monthCents)} · ${thisMonth.length} compras</span></div>
       <div class="stat"><span class="eyebrow">Aportaciones</span><b>${s.rewards_count}</b><span class="muted" style="font-size:12px">desde el alta</span></div>
     </div>
     ${b.simulatePurchase ? `<div class="actions">
@@ -377,7 +385,7 @@ async function screenShops() {
     <div class="list">${shown.map(m => `<button class="item" type="button" data-merchant="${m.id}">
       <span class="avatar" aria-hidden="true">${esc(initials(m.name))}</span>
       <span class="txt"><span class="name">${esc(m.name)}</span><span class="sub">${esc(m.address || m.locations?.[0]?.address || m.category)}</span></span>
-      <span class="amt"><span class="pct">${m.user_pct.toLocaleString("es-ES")} %</span><span class="sub muted" style="font-size:11px">para tu plan</span></span>
+      <span class="amt"><span class="pct">${m.user_pct.toLocaleString("es-NI")} %</span><span class="sub muted" style="font-size:11px">para tu plan</span></span>
     </button>`).join("")}</div>
   </section>`;
 }
@@ -414,8 +422,10 @@ function niceStep(max) {
   return [1, 2, 2.5, 5, 10].map(f => f * mag).find(s => s >= raw);
 }
 
+const axisLabel = c => c >= 100000 ? `C$ ${num(c / 100000, c % 100000 ? 1 : 0)} mil` : fmtShort(c);
+
 function chartSvg(pts) {
-  const W = 340, H = 190, L = 44, R = 10, T = 10, B = 24;
+  const W = 340, H = 190, L = 72, R = 12, T = 10, B = 24;
   const maxV = Math.max(...pts.map(p => p.value), 1);
   const step = niceStep(maxV), top = Math.ceil(maxV / step) * step;
   const years = pts[pts.length - 1].y || 1;
@@ -426,7 +436,7 @@ function chartSvg(pts) {
   let grid = "";
   for (let v = 0; v <= top + 1e-6; v += step) {
     grid += `<line x1="${L}" x2="${W - R}" y1="${yv(v)}" y2="${yv(v)}" stroke="var(--line)" stroke-width="1"/>
-      <text x="${L - 6}" y="${yv(v) + 3}" text-anchor="end">${fmtShort(v)}</text>`;
+      <text x="${L - 6}" y="${yv(v) + 3}" text-anchor="end">${axisLabel(v)}</text>`;
   }
   const yStep = years <= 10 ? 2 : years <= 30 ? 5 : 10;
   let xt = "";
@@ -455,16 +465,16 @@ async function screenFuture() {
       </div>
     </div>
     <div class="result">
-      <div class="stat"><span class="eyebrow">En ${years} años</span><b>${fmtShort(last.value)}</b></div>
-      <div class="stat"><span class="eyebrow">Aportado</span><b>${fmtShort(last.paid)}</b></div>
+      <div class="stat"><span class="eyebrow">En ${years} años</span><b>${fmtShort(last.value)}</b>${usdTag(last.value, 0)}</div>
+      <div class="stat"><span class="eyebrow">Aportado</span><b>${fmtShort(last.paid)}</b>${usdTag(last.paid, 0)}</div>
     </div>
-    <div class="field"><div class="row"><label for="sim-monthly">Aportación mensual por compras</label><output id="o-monthly" class="num">${fmt(monthly)}</output></div>
-      <input type="range" id="sim-monthly" min="0" max="10000" step="100" value="${monthly}"></div>
+    <div class="field"><div class="row"><label for="sim-monthly">Aportación mensual por compras</label><output id="o-monthly" class="num">${fmtShort(monthly)} <span class="usd">(${fmtUsd(monthly)})</span></output></div>
+      <input type="range" id="sim-monthly" min="0" max="500000" step="5000" value="${monthly}"></div>
     <div class="field"><div class="row"><label for="sim-years">Años hasta la jubilación</label><output class="num">${years}</output></div>
       <input type="range" id="sim-years" min="5" max="45" step="1" value="${years}"></div>
-    <div class="field"><div class="row"><label for="sim-ret">Rentabilidad anual</label><output class="num">${ret.toLocaleString("es-ES")} %</output></div>
+    <div class="field"><div class="row"><label for="sim-ret">Rentabilidad anual</label><output class="num">${ret.toLocaleString("es-NI")} %</output></div>
       <input type="range" id="sim-ret" min="0" max="7" step="0.5" value="${ret}"></div>
-    <p class="muted" style="font-size:12.5px">Parte de tu saldo actual (${fmt(s.total_cents)}). Es una estimación: la rentabilidad pasada no garantiza la futura.</p>
+    <p class="muted" style="font-size:12.5px">Parte de tu saldo actual (${fmt(s.total_cents)} ≈ ${fmtUsd(s.total_cents)}). Dólares a tasa de C$ ${num(USD_RATE, 2)}. Es una estimación: la rentabilidad pasada no garantiza la futura.</p>
   </section>`;
 }
 
@@ -475,10 +485,10 @@ async function screenProfile() {
     <div><span class="eyebrow">Perfil</span><h1>${esc(b.user.name)}</h1><p class="muted">${esc(b.user.email)}</p></div>
     ${card ? `<div class="card-visual"><div class="row"><span class="eyebrow" style="color:inherit">Tarjeta vinculada</span><b>${esc(card.brand)}</b></div>
       <span class="num">•••• •••• •••• ${esc(card.last4)}</span>
-      <span style="font-size:12px;opacity:.8">Leemos tus compras con tu permiso (PSD2). Nunca guardamos el número completo.</span></div>` : ""}
+      <span style="font-size:12px;opacity:.8">Leemos tus compras con tu permiso, solo en modo lectura. Nunca guardamos el número completo.</span></div>` : ""}
     <div class="list">
-      <div class="item"><span class="avatar" aria-hidden="true">PP</span><span class="txt"><span class="name">Plan de pensiones</span><span class="sub">${esc(b.account.provider)} · ${esc(b.account.external_account_id)}</span></span><span class="pill CONFIRMED">Activo</span></div>
-      <div class="item"><span class="avatar" aria-hidden="true">+</span><span class="txt"><span class="name">Vincular otra tarjeta</span><span class="sub">Cualquier banco español</span></span><span class="muted">›</span></div>
+      <div class="item"><span class="avatar" aria-hidden="true">PP</span><span class="txt"><span class="name">Plan de ahorro para el retiro</span><span class="sub">${esc(b.account.provider)} · ${esc(b.account.external_account_id)}</span></span><span class="pill CONFIRMED">Activo</span></div>
+      <div class="item"><span class="avatar" aria-hidden="true">+</span><span class="txt"><span class="name">Vincular otra tarjeta</span><span class="sub">Los principales bancos de Nicaragua</span></span><span class="muted">›</span></div>
       <div class="item"><span class="avatar" aria-hidden="true">R</span><span class="txt"><span class="name">Redondeo de compras</span><span class="sub">Próximamente</span></span><span class="muted">›</span></div>
     </div>
     ${b.mode === "Demo" ? `<div class="note"><b>Estás en el modo demo</b><span>Los datos son de ejemplo. Al servir este prototipo desde el backend (<span class="num">/app</span>) puedes entrar con una cuenta real.</span></div>`
@@ -489,11 +499,11 @@ async function screenProfile() {
 function merchantSheet(m) {
   const wrap = document.createElement("div");
   wrap.className = "sheet-wrap";
-  const ex = [2000, 5000, 10000];
+  const ex = [50000, 100000, 250000];
   wrap.innerHTML = `<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
-    <div class="row"><div><span class="eyebrow">${esc(m.category)}</span><h1 id="sheet-title">${esc(m.name)}</h1></div><span class="pct" style="font-size:26px">${m.user_pct.toLocaleString("es-ES")} %</span></div>
+    <div class="row"><div><span class="eyebrow">${esc(m.category)}</span><h1 id="sheet-title">${esc(m.name)}</h1></div><span class="pct" style="font-size:26px">${m.user_pct.toLocaleString("es-NI")} %</span></div>
     <p class="muted">${esc(m.address || m.locations?.[0]?.address || "")}</p>
-    <div class="list">${ex.map(c => `<div class="item"><span class="avatar" aria-hidden="true">€</span><span class="txt"><span class="name num">Compra de ${fmtShort(c)}</span><span class="sub">Pagando con tu tarjeta vinculada</span></span><span class="plus">+${fmt(Math.floor(c * m.user_pct / 100))}</span></div>`).join("")}</div>
+    <div class="list">${ex.map(c => `<div class="item"><span class="avatar" aria-hidden="true">C$</span><span class="txt"><span class="name num">Compra de ${fmtShort(c)}</span><span class="sub num">${fmtUsd(c)} · con tu tarjeta vinculada</span></span><span class="amt"><span class="plus">+${fmt(Math.floor(c * m.user_pct / 100))}</span>${usdTag(Math.floor(c * m.user_pct / 100))}</span></div>`).join("")}</div>
     <button class="btn" type="button" id="close-sheet">Entendido</button>
   </div>`;
   const close = () => wrap.remove();
@@ -540,7 +550,7 @@ $main.addEventListener("click", async e => {
     const r = await b.simulatePurchase();
     await render();
     document.getElementById("coin")?.classList.add("go");
-    toast(`+${fmt(r.user_amount_cents)} para tu jubilación en ${r.merchant}`);
+    toast(`+${fmt(r.user_amount_cents)} (${fmtUsd(r.user_amount_cents)}) para tu jubilación en ${r.merchant}`);
   } else if (t.id === "skip") {
     await b.advanceDays(30);
     await render();

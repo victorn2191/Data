@@ -15,13 +15,13 @@ from .rewards import confirm_due_rewards, create_payout_batch, merchant_amount_d
 from .security import hash_password
 
 MERCHANTS = [
-    # nombre, cif, categoría, patrón descriptor, mcc, % usuario (pb), % plataforma (pb), dirección, lat, lng
-    ("Frutería La Huerta", "B50000001", "alimentación", "FRUTERIA LA HUERTA", "5411", 500, 150, "C/ Alfonso I 12, Zaragoza", 41.6535, -0.8796),
-    ("Librería Cervantes", "B50000002", "cultura", "LIBRERIA CERVANTES", "5942", 400, 100, "C/ Don Jaime 5, Zaragoza", 41.6529, -0.8768),
-    ("Óptica Visión", "B50000003", "salud", "OPTICA VISION", "8043", 600, 200, "Pº Independencia 20, Zaragoza", 41.6487, -0.8837),
-    ("Café del Mercado", "B50000004", "restauración", "CAFE DEL MERCADO", "5814", 300, 100, "Pl. Lanuza 1, Zaragoza", 41.6540, -0.8810),
-    ("Deportes Moncayo", "B50000005", "deporte", "DEPORTES MONCAYO", "5941", 350, 100, "C/ Delicias 40, Zaragoza", 41.6460, -0.9010),
-    ("Supermercado Ebro", "B50000006", "alimentación", "SUPER EBRO", "5411", 150, 50, "Av. Goya 30, Zaragoza", 41.6450, -0.8890),
+    # nombre, RUC, categoría, patrón descriptor, mcc, % usuario (pb), % plataforma (pb), dirección, lat, lng
+    ("Frutería La Cosecha", "J0310000000001", "alimentación", "FRUTERIA LA COSECHA", "5411", 500, 150, "Altamira, Managua", 12.1180, -86.2510),
+    ("Librería El Güegüense", "J0310000000002", "cultura", "LIBRERIA EL GUEGUENSE", "5942", 400, 100, "Los Robles, Managua", 12.1240, -86.2620),
+    ("Óptica Visión", "J0310000000003", "salud", "OPTICA VISION", "8043", 600, 200, "Carretera a Masaya, Managua", 12.1050, -86.2490),
+    ("Café del Mercado", "J0310000000004", "restauración", "CAFE DEL MERCADO", "5814", 300, 100, "Calle La Calzada, Granada", 11.9300, -85.9560),
+    ("Deportes Momotombo", "J0310000000005", "deporte", "DEPORTES MOMOTOMBO", "5941", 350, 100, "Centro, León", 12.4350, -86.8790),
+    ("Supermercado Xolotlán", "J0310000000006", "alimentación", "SUPER XOLOTLAN", "5411", 150, 50, "Bolonia, Managua", 12.1430, -86.2730),
 ]
 
 
@@ -59,9 +59,9 @@ def run() -> None:
             external_id=f"seed-{i}",
             user_id=user.id,
             card_id=card.id,
-            amount_cents=rng.randint(800, 9000),
+            amount_cents=rng.randint(30000, 330000),  # C$ 300 – C$ 3,300
             booked_at=booked,
-            raw_descriptor=f"COMPRA TARJ. 4242 {pattern} ZARAGOZA ES",
+            raw_descriptor=f"COMPRA TARJ. 4242 {pattern} MANAGUA NI",
             mcc=mcc,
         )
         db.add(tx)
@@ -69,14 +69,14 @@ def run() -> None:
         process_transaction(db, tx)
     # Una compra fuera de la red (no genera aportación)
     db.add(Transaction(provider="demo-psd2", external_id="seed-x", user_id=user.id, card_id=card.id,
-                       amount_cents=2500, booked_at=now, raw_descriptor="GASOLINERA CUALQUIERA", status="UNMATCHED"))
+                       amount_cents=95000, booked_at=now, raw_descriptor="GASOLINERA CUALQUIERA", status="UNMATCHED"))
 
     confirm_due_rewards(db, now)
     # Los comercios pagan lo confirmado y se envía un lote a la gestora
     for m, *_ in merchants:
         due, _ = merchant_amount_due(db, m.id)
         if due:
-            record_merchant_payment(db, m.id, due, f"SEPA-{m.cif}-seed")
+            record_merchant_payment(db, m.id, due, f"PAGO-{m.cif}-seed")
     create_payout_batch(db)
     db.commit()
     print("Datos de demo cargados. Usuario: demo@futuroya.com / demo12345")

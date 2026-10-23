@@ -5,7 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from .. import ledger
-from ..config import settings
+from ..config import settings, to_usd_cents
 from ..db import get_db
 from ..models import LinkedCard, Merchant, PensionAccount, Reward, RewardStatus, Transaction, User
 from ..schemas import (
@@ -106,11 +106,15 @@ def summary(user: User = Depends(current_user), db: Session = Depends(get_db)):
             select(Reward.id).where(Reward.user_id == user.id, Reward.status != RewardStatus.REVERSED)
         ).all()
     )
+    total = pending + confirmed + invested
     return SummaryOut(
+        currency=settings.currency,
+        usd_rate=settings.usd_rate,
         pending_cents=pending,
         confirmed_cents=confirmed,
         invested_cents=invested,
-        total_cents=pending + confirmed + invested,
+        total_cents=total,
+        total_usd_cents=to_usd_cents(total),
         rewards_count=count,
     )
 
@@ -135,6 +139,7 @@ def rewards(
             merchant=m.name,
             purchase_cents=t.amount_cents,
             user_amount_cents=r.user_amount_cents,
+            user_amount_usd_cents=to_usd_cents(r.user_amount_cents),
             status=r.status,
             booked_at=t.booked_at,
         )
@@ -163,4 +168,6 @@ def projection(
         annual_return_pct=annual_return_pct,
         contributed_cents=current + monthly_cents * months,
         projected_cents=round(value),
+        projected_usd_cents=to_usd_cents(round(value)),
+        usd_rate=settings.usd_rate,
     )

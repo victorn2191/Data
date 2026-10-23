@@ -11,6 +11,14 @@ class Settings:
     hold_days: int = int(os.getenv("HOLD_DAYS", "30"))
     # Proveedor del producto de ahorro (gestora / aseguradora)
     pension_provider: str = os.getenv("PENSION_PROVIDER", "demo-gestora")
+    # Moneda de operación (córdobas) y tasa para mostrar el equivalente en dólares
+    currency: str = os.getenv("CURRENCY", "NIO")
+    usd_rate: float = float(os.getenv("USD_RATE", "37.10"))  # C$ por cada US$ 1
 
 
 settings = Settings()
+
+
+def to_usd_cents(nio_cents: int) -> int:
+    """Equivalente en centavos de dólar de un importe en centavos de córdoba."""
+    return round(nio_cents / settings.usd_rate)

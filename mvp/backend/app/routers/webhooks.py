@@ -3,6 +3,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from ..config import settings
 from ..db import get_db
 from ..models import LinkedCard, Reward, Transaction, TxStatus
 from ..rewards import process_transaction
@@ -53,7 +54,7 @@ def ingest_transaction(body: TransactionWebhookIn, db: Session = Depends(get_db)
         raw_descriptor=body.descriptor,
         mcc=body.mcc,
     )
-    if body.currency != "EUR":
+    if body.currency != settings.currency:
         tx.status = TxStatus.NEEDS_REVIEW
         db.add(tx)
         db.commit()

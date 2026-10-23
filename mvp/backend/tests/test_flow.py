@@ -146,3 +146,24 @@ def test_confirm_then_statement_in_same_session(client, merchant, user):
     assert confirm_due_rewards(db, utcnow()) == 1
     assert merchant_amount_due(db, merchant["id"])[0] == 260
     db.rollback()
+
+
+def test_amounts_in_cordobas_with_usd_equivalent(client, merchant, user):
+    """Los importes se llevan en córdobas y se muestra su equivalente en dólares (C$ 37.10 = US$ 1)."""
+    send_tx(client, "tx1", 371000)  # compra de C$ 3,710 -> 5 % = C$ 185.50
+    s = summary(client, user)
+    assert s["currency"] == "NIO" and s["usd_rate"] == 37.10
+    assert s["total_cents"] == 18550
+    assert s["total_usd_cents"] == 500  # US$ 5.00
+    reward = client.get("/me/rewards", headers=user["auth"]).json()[0]
+    assert reward["user_amount_usd_cents"] == 500
+
+
+def test_other_currencies_go_to_review(client, merchant, user):
+    r = client.post(
+        "/webhooks/transactions",
+        json={"provider": "demo-psd2", "external_id": "usd1", "card_token": "tok_ana", "amount_cents": 1000,
+              "currency": "USD", "booked_at": "2026-01-10T10:00:00", "descriptor": "FRUTERIA LA HUERTA"},
+        headers=HOOK,
+    ).json()
+    assert r["status"] == "NEEDS_REVIEW"

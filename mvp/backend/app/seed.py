@@ -1,7 +1,7 @@
 """Carga datos de demostración: comercios, ofertas, un usuario con tarjeta y compras.
 
 Uso:  python -m app.seed
-Usuario demo: demo@hucha-futura.es / demo12345
+Usuario demo: demo@futuroya.com / demo12345
 """
 
 import random
@@ -28,7 +28,7 @@ MERCHANTS = [
 def run() -> None:
     init_db()
     db = SessionLocal()
-    if db.execute(select(User).where(User.email == "demo@hucha-futura.es")).scalar_one_or_none():
+    if db.execute(select(User).where(User.email == "demo@futuroya.com")).scalar_one_or_none():
         print("Los datos de demo ya existen.")
         return
 
@@ -41,7 +41,7 @@ def run() -> None:
         db.add(Offer(merchant_id=m.id, user_bps=ubps, platform_bps=pbps, valid_from=utcnow() - timedelta(days=365)))
         merchants.append((m, pattern, mcc))
 
-    user = User(email="demo@hucha-futura.es", name="Lucía Demo", password_hash=hash_password("demo12345"), kyc_status="VERIFIED")
+    user = User(email="demo@futuroya.com", name="Lucía Demo", password_hash=hash_password("demo12345"), kyc_status="VERIFIED")
     db.add(user)
     db.flush()
     db.add(PensionAccount(user_id=user.id, provider="demo-gestora", external_account_id="PP-DEMO0001"))
@@ -79,7 +79,7 @@ def run() -> None:
             record_merchant_payment(db, m.id, due, f"SEPA-{m.cif}-seed")
     create_payout_batch(db)
     db.commit()
-    print("Datos de demo cargados. Usuario: demo@hucha-futura.es / demo12345")
+    print("Datos de demo cargados. Usuario: demo@futuroya.com / demo12345")
 
 
 if __name__ == "__main__":

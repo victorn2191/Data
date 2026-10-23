@@ -18,7 +18,7 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(
-    title="Hucha Futura – MVP de ahorro para la jubilación por consumo",
+    title="FuturoYa – MVP de ahorro para la jubilación por consumo",
     version="0.1.0",
     lifespan=lifespan,
 )

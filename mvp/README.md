@@ -1,4 +1,4 @@
-# Hucha Futura – MVP
+# FuturoYa – MVP
 
 MVP de una app de ahorro para la jubilación ligada al consumo (modelo inspirado en Pensumo, ver `docs/pensumo-analisis.md`).
 Cada compra con tarjeta en un comercio adherido genera una aportación al plan del usuario, que pagará el comercio.
@@ -19,7 +19,7 @@ python -m app.seed                 # datos de ejemplo
 uvicorn app.main:app --reload      # http://localhost:8000
 ```
 
-- App: http://localhost:8000/app/ (usuario `demo@hucha-futura.es`, contraseña `demo12345`)
+- App: http://localhost:8000/app/ (usuario `demo@futuroya.com`, contraseña `demo12345`)
 - Documentación de la API: http://localhost:8000/docs
 - Tests: `pytest`
 

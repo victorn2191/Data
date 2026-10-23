@@ -1,4 +1,4 @@
-<title>Hucha Futura</title>
+<title>FuturoYa</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -70,6 +70,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 .brand { display: flex; align-items: center; gap: 8px; font: 700 18px/1 var(--display); letter-spacing: -.01em; }
 .brand svg { width: 26px; height: 26px; }
+.brand .ya { color: var(--coin); }
 .mode { font: 500 11px/1 var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--muted);
   border: 1px solid var(--line); border-radius: 99px; padding: 6px 9px; background: var(--surface); }
 
@@ -179,7 +180,7 @@ nav.tabs button[aria-current="page"] { color: var(--pine); font-weight: 600; }
   <header class="topbar">
     <div class="brand">
       <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="9" width="24" height="19" rx="7" fill="var(--pine)"/><rect x="12" y="11.5" width="8" height="2.4" rx="1.2" fill="var(--bg)"/><circle cx="16" cy="5.5" r="4.2" fill="var(--coin)"/></svg>
-      Hucha Futura
+      <span>Futuro<span class="ya">Ya</span></span>
     </div>
     <span class="mode" id="mode">Demo</span>
   </header>
@@ -236,7 +237,7 @@ function demoBackend() {
   settle();
   return {
     mode: "Demo",
-    user: { name: "Lucía (ejemplo)", email: "demo@hucha-futura.es" },
+    user: { name: "Lucía (ejemplo)", email: "demo@futuroya.com" },
     cards: [{ id: 1, brand: "VISA", last4: "4242", provider: "demo-psd2", status: "ACTIVE" }],
     account: { provider: "Gestora de ejemplo", external_account_id: "PP-DEMO0001" },
     async summary() {
@@ -295,7 +296,7 @@ const ICONS = {
   future: '<path d="M4 19 9.5 13l3.5 3L20 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 7h5v5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
   profile: '<circle cx="12" cy="9" r="3.6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5 20c1.2-3.6 4-5 7-5s5.8 1.4 7 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
 };
-const TABS = [["home", "Hucha"], ["shops", "Comercios"], ["moves", "Movimientos"], ["future", "Futuro"], ["profile", "Perfil"]];
+const TABS = [["home", "Inicio"], ["shops", "Comercios"], ["moves", "Movimientos"], ["future", "Futuro"], ["profile", "Perfil"]];
 
 function renderTabs() {
   $tabs.innerHTML = TABS.map(([id, label]) =>
@@ -305,7 +306,7 @@ $tabs.addEventListener("click", e => {
   const b = e.target.closest("[data-tab]");
   if (!b) return;
   state.tab = b.dataset.tab;
-  try { localStorage.setItem("hucha.tab", state.tab); } catch {}
+  try { localStorage.setItem("futuroya.tab", state.tab); } catch {}
   render();
 });
 
@@ -505,7 +506,7 @@ function loginScreen(error = "") {
   return `<section class="screen">
     <div><span class="eyebrow">Backend conectado</span><h1>Entra en tu hucha</h1><p class="muted">Usuario de ejemplo cargado con <span class="num">python -m app.seed</span>.</p></div>
     <form id="login">
-      <label for="email">Email</label><input type="email" id="email" value="demo@hucha-futura.es" required>
+      <label for="email">Email</label><input type="email" id="email" value="demo@futuroya.com" required>
       <label for="password">Contraseña</label><input type="password" id="password" value="demo12345" required>
       ${error ? `<p class="error">${esc(error)}</p>` : ""}
       <button class="btn" type="submit">Entrar</button>
@@ -547,7 +548,7 @@ $main.addEventListener("click", async e => {
   } else if (t.id === "use-demo") {
     start(demoBackend());
   } else if (t.id === "logout") {
-    try { sessionStorage.removeItem("hucha.token"); } catch {}
+    try { sessionStorage.removeItem("futuroya.token"); } catch {}
     $main.innerHTML = loginScreen();
   }
 });
@@ -573,7 +574,7 @@ $main.addEventListener("submit", async e => {
       body: JSON.stringify({ email: e.target.email.value, password: e.target.password.value }) });
     if (!r.ok) throw new Error("Email o contraseña incorrectos");
     const { token } = await r.json();
-    try { sessionStorage.setItem("hucha.token", token); } catch {}
+    try { sessionStorage.setItem("futuroya.token", token); } catch {}
     await startApi(token);
   } catch (err) {
     $main.innerHTML = loginScreen(err.message);
@@ -593,7 +594,7 @@ async function startApi(token) {
 }
 
 (async function boot() {
-  try { state.tab = localStorage.getItem("hucha.tab") || "home"; } catch {}
+  try { state.tab = localStorage.getItem("futuroya.tab") || "home"; } catch {}
   if (!SCREENS[state.tab]) state.tab = "home";
   // Servido por el backend (/app/): intentamos usar la API real. En cualquier otro sitio, modo demo.
   if (location.pathname.startsWith("/app")) {
@@ -601,7 +602,7 @@ async function startApi(token) {
       const health = await fetch("/health");
       if (health.ok) {
         let token = null;
-        try { token = sessionStorage.getItem("hucha.token"); } catch {}
+        try { token = sessionStorage.getItem("futuroya.token"); } catch {}
         if (token) { try { await startApi(token); return; } catch {} }
         renderTabs();
         document.getElementById("mode").textContent = "Backend";

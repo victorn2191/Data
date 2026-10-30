@@ -1,0 +1,626 @@
+<title>FuturoYa</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: una sola pantalla de móvil; en escritorio se presenta dentro de un marco de teléfono centrado. */
+:root {
+  --ground: #E8ECEA;      /* fondo tras el teléfono (escritorio) */
+  --bg: #F5F7F6;          /* superficie de la app */
+  --surface: #FFFFFF;
+  --ink: #15231F;
+  --muted: #5D6B66;
+  --line: #DCE3E0;
+  --pine: #1F5C4A;        /* marca: ahorro a largo plazo */
+  --pine-soft: #DDEBE5;
+  --coin: #C9932E;        /* acento: la moneda que entra en la hucha */
+  --coin-soft: #F6EBD3;
+  --pending: #8A6A12;  --pending-bg: #F7EFD9;
+  --confirmed: #1F5C4A; --confirmed-bg: #DDEBE5;
+  --invested: #2D4F8A; --invested-bg: #E0E8F6;
+  --reversed: #8C3B3B; --reversed-bg: #F5E1E1;
+  --on-pine: #FFFFFF;
+  --shadow: 0 1px 2px rgb(21 35 31 / .06), 0 8px 24px rgb(21 35 31 / .08);
+  --display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", sans-serif;
+  --body: "Figtree", "Segoe UI", system-ui, sans-serif;
+  --mono: "DM Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #0B1210; --bg: #111A17; --surface: #18231F; --ink: #E6EEEA; --muted: #9AABA4; --line: #26342F;
+    --pine: #5FB79A; --pine-soft: #1C3A30; --coin: #E2B357; --coin-soft: #3A2F18;
+    --pending: #E2C068; --pending-bg: #3A3118; --confirmed: #7FCDB1; --confirmed-bg: #183A2F;
+    --invested: #9DB8EC; --invested-bg: #1C2A44; --reversed: #E59C9C; --reversed-bg: #3D2222;
+    --on-pine: #0B1210; --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 8px 24px rgb(0 0 0 / .35);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #0B1210; --bg: #111A17; --surface: #18231F; --ink: #E6EEEA; --muted: #9AABA4; --line: #26342F;
+  --pine: #5FB79A; --pine-soft: #1C3A30; --coin: #E2B357; --coin-soft: #3A2F18;
+  --pending: #E2C068; --pending-bg: #3A3118; --confirmed: #7FCDB1; --confirmed-bg: #183A2F;
+  --invested: #9DB8EC; --invested-bg: #1C2A44; --reversed: #E59C9C; --reversed-bg: #3D2222;
+  --on-pine: #0B1210; --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 8px 24px rgb(0 0 0 / .35);
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  background: var(--ground); color: var(--ink); font: 15px/1.45 var(--body);
+  display: flex; justify-content: center; align-items: center;
+}
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--coin); outline-offset: 2px; }
+.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+.phone {
+  position: relative; width: 100%; height: 100%; background: var(--bg);
+  display: grid; grid-template-rows: auto 1fr auto; overflow: hidden;
+}
+@media (min-width: 560px) {
+  .phone { width: 392px; height: min(820px, calc(100% - 48px)); border-radius: 36px; box-shadow: var(--shadow); border: 1px solid var(--line); }
+}
+
+.topbar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding-block: 14px 10px;
+  padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: max(18px, env(safe-area-inset-right, 0px));
+}
+.brand { display: flex; align-items: center; gap: 8px; font: 700 18px/1 var(--display); letter-spacing: -.01em; }
+.brand svg { width: 26px; height: 26px; }
+.brand .ya { color: var(--coin); }
+.mode { font: 500 11px/1 var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--muted);
+  border: 1px solid var(--line); border-radius: 99px; padding: 6px 9px; background: var(--surface); }
+
+main {
+  overflow-y: auto; min-height: 0;
+  padding-block: 4px 24px;
+  padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: max(18px, env(safe-area-inset-right, 0px));
+}
+.screen { display: grid; gap: 18px; }
+h1, h2 { font-family: var(--display); margin: 0; text-wrap: balance; }
+h1 { font-size: 24px; font-weight: 700; letter-spacing: -.02em; }
+h2 { font-size: 16px; font-weight: 700; }
+.eyebrow { font: 500 11px/1 var(--mono); text-transform: uppercase; letter-spacing: .09em; color: var(--muted); }
+.muted { color: var(--muted); }
+.row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+p { margin: 0; }
+
+/* Hucha: saldo principal */
+.vault { background: var(--pine); color: var(--on-pine); border-radius: 24px; padding: 20px; display: grid; gap: 14px; position: relative; overflow: hidden; }
+.vault .eyebrow { color: inherit; opacity: .75; }
+.vault .total { font: 700 40px/1 var(--display); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.vault .total small { font-size: 22px; opacity: .8; }
+.bar { display: flex; height: 10px; border-radius: 99px; overflow: hidden; background: rgb(255 255 255 / .18); gap: 2px; }
+.bar span { display: block; height: 100%; transition: flex-grow .5s ease; }
+.legend { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; font-size: 12px; }
+.legend div { display: grid; gap: 2px; min-width: 0; }
+.legend b { font: 500 14px/1.2 var(--mono); }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; vertical-align: 1px; }
+.coin-drop { position: absolute; right: 22px; top: -30px; width: 26px; height: 26px; border-radius: 50%;
+  background: var(--coin); box-shadow: inset 0 -3px 0 rgb(0 0 0 / .18); opacity: 0; }
+.coin-drop.go { animation: drop .9s ease-in forwards; }
+@keyframes drop { 0% { opacity: 1; transform: translateY(0); } 80% { opacity: 1; transform: translateY(70px); } 100% { opacity: 0; transform: translateY(80px) scale(.6); } }
+
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; display: grid; gap: 4px; }
+.stat b { font: 500 18px/1.2 var(--mono); }
+
+.list { display: grid; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+.item { display: grid; grid-template-columns: 38px 1fr auto; gap: 12px; align-items: center; padding: 12px 14px; border: 0; background: none; text-align: left; width: 100%; }
+.item + .item { border-top: 1px solid var(--line); }
+.item .txt { min-width: 0; display: grid; gap: 2px; }
+.item .name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.item .sub { font-size: 12.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.item .amt { text-align: right; display: grid; gap: 4px; justify-items: end; }
+.avatar { width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center; font: 700 15px/1 var(--display); background: var(--coin-soft); color: var(--ink); }
+.plus { font: 500 15px/1 var(--mono); color: var(--pine); }
+.usd { font: 400 11px/1.2 var(--mono); color: var(--muted); }
+.vault .usd { color: inherit; opacity: .75; }
+.usd-big { font: 500 12.5px/1.2 var(--mono); opacity: .8; margin-top: -6px; }
+.pill { font: 500 10.5px/1 var(--mono); text-transform: uppercase; letter-spacing: .05em; padding: 4px 7px; border-radius: 99px; white-space: nowrap; }
+.pill.PENDING { color: var(--pending); background: var(--pending-bg); }
+.pill.CONFIRMED { color: var(--confirmed); background: var(--confirmed-bg); }
+.pill.INVESTED { color: var(--invested); background: var(--invested-bg); }
+.pill.REVERSED { color: var(--reversed); background: var(--reversed-bg); }
+.pct { font: 700 17px/1 var(--display); color: var(--pine); }
+
+.chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+.chip { flex: none; border: 1px solid var(--line); background: var(--surface); border-radius: 99px; padding: 7px 12px; font-size: 13px; }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+.btn { border: 0; border-radius: 14px; padding: 13px 16px; font-weight: 600; background: var(--pine); color: var(--on-pine); }
+.btn.ghost { background: var(--surface); color: var(--ink); border: 1px solid var(--line); }
+.btn.coin { background: var(--coin); color: #1D1608; }
+.btn:disabled { opacity: .5; cursor: default; }
+.actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.note { background: var(--coin-soft); border-radius: 16px; padding: 12px 14px; font-size: 13.5px; display: grid; gap: 4px; }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 11.5px; text-align: center; }
+.steps div { display: grid; gap: 6px; justify-items: center; }
+
+/* Simulador */
+.field { display: grid; gap: 6px; }
+.field .row label { font-weight: 600; font-size: 14px; }
+.field output { font: 500 14px/1 var(--mono); }
+input[type="range"] { width: 100%; accent-color: var(--pine); }
+.chart { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 14px 10px 8px; }
+.chart svg { width: 100%; height: auto; display: block; }
+.chart text { fill: var(--muted); font: 10px var(--mono); }
+.result { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* Perfil / login */
+.card-visual { border-radius: 18px; padding: 16px; background: linear-gradient(135deg, var(--ink), var(--pine)); color: var(--bg); display: grid; gap: 22px; }
+.card-visual .num { font-size: 16px; letter-spacing: .12em; }
+form { display: grid; gap: 10px; }
+input[type="email"], input[type="password"], input[type="text"] {
+  font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px; width: 100%; }
+.error { color: var(--reversed); font-size: 13px; }
+
+nav.tabs {
+  display: grid; grid-template-columns: repeat(5, 1fr); border-top: 1px solid var(--line); background: var(--surface);
+  padding-block: 6px max(6px, env(safe-area-inset-bottom, 0px));
+  padding-left: max(4px, env(safe-area-inset-left, 0px)); padding-right: max(4px, env(safe-area-inset-right, 0px));
+}
+nav.tabs button { border: 0; background: none; display: grid; justify-items: center; gap: 3px; padding: 6px 0; font-size: 11px; color: var(--muted); }
+nav.tabs button svg { width: 22px; height: 22px; }
+nav.tabs button[aria-current="page"] { color: var(--pine); font-weight: 600; }
+
+.toast { position: absolute; left: 50%; bottom: 84px; transform: translate(-50%, 20px); background: var(--ink); color: var(--bg);
+  padding: 10px 14px; border-radius: 12px; font-size: 13.5px; opacity: 0; pointer-events: none; transition: .25s; width: max-content; max-width: calc(100% - 36px); }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+.sheet-wrap { position: absolute; inset: 0; background: rgb(0 0 0 / .35); display: flex; align-items: flex-end; }
+.sheet { background: var(--bg); width: 100%; border-radius: 24px 24px 0 0; display: grid; gap: 14px;
+  padding-block: 20px max(20px, env(safe-area-inset-bottom, 0px)); padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: max(18px, env(safe-area-inset-right, 0px)); }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+</style>
+
+<div class="phone" id="phone">
+  <header class="topbar">
+    <div class="brand">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="9" width="24" height="19" rx="7" fill="var(--pine)"/><rect x="12" y="11.5" width="8" height="2.4" rx="1.2" fill="var(--bg)"/><circle cx="16" cy="5.5" r="4.2" fill="var(--coin)"/></svg>
+      <span>Futuro<span class="ya">Ya</span></span>
+    </div>
+    <span class="mode" id="mode">Demo</span>
+  </header>
+  <main id="main" aria-live="polite"></main>
+  <nav class="tabs" id="tabs" aria-label="Secciones"></nav>
+  <div class="toast" id="toast" role="status"></div>
+</div>
+
+<script>
+"use strict";
+/* Moneda: córdobas (NIO), con su equivalente en dólares a tasa fija. Importes en centavos. */
+const USD_RATE = 37.10; // C$ por cada US$ 1
+const num = (v, d) => v.toLocaleString("es-NI", { minimumFractionDigits: d, maximumFractionDigits: d });
+const fmt = (c, d = 2) => `C$ ${num(c / 100, d)}`;
+const fmtShort = c => fmt(c, 0);
+const fmtUsd = (c, d = 2) => `US$ ${num(c / 100 / USD_RATE, d)}`;
+const usdTag = (c, d = 2) => `<span class="usd">≈ ${fmtUsd(c, d)}</span>`;
+const dateFmt = new Intl.DateTimeFormat("es-NI", { day: "numeric", month: "short" });
+const esc = s => String(s).replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+const STATUS = { PENDING: "Pendiente", CONFIRMED: "Confirmada", INVESTED: "En tu plan", REVERSED: "Anulada" };
+const HOLD_DAYS = 30;
+
+/* ---------- Modo demo: datos de ejemplo en memoria (mismo modelo que el backend) ---------- */
+const DEMO_MERCHANTS = [
+  { id: 1, name: "Frutería La Cosecha", category: "alimentación", user_bps: 500, platform_bps: 150, address: "Altamira, Managua" },
+  { id: 2, name: "Librería El Güegüense", category: "cultura", user_bps: 400, platform_bps: 100, address: "Los Robles, Managua" },
+  { id: 3, name: "Óptica Visión", category: "salud", user_bps: 600, platform_bps: 200, address: "Carretera a Masaya, Managua" },
+  { id: 4, name: "Café del Mercado", category: "restauración", user_bps: 300, platform_bps: 100, address: "Calle La Calzada, Granada" },
+  { id: 5, name: "Deportes Momotombo", category: "deporte", user_bps: 350, platform_bps: 100, address: "Centro, León" },
+  { id: 6, name: "Supermercado Xolotlán", category: "alimentación", user_bps: 150, platform_bps: 50, address: "Bolonia, Managua" },
+];
+
+function demoBackend() {
+  let seed = 7;
+  const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  let clock = Date.now();
+  let nextId = 1;
+  const rewards = [];
+  const addPurchase = (m, amount, at) => {
+    const r = { id: nextId++, merchant: m.name, purchase_cents: amount,
+      user_amount_cents: Math.floor(amount * m.user_bps / 10000), status: "PENDING", booked_at: new Date(at).toISOString() };
+    rewards.push(r);
+    return r;
+  };
+  // Historial de ejemplo: 4 meses de compras
+  for (let i = 0; i < 38; i++) {
+    const m = DEMO_MERCHANTS[Math.floor(rand() * DEMO_MERCHANTS.length)];
+    addPurchase(m, 30000 + Math.floor(rand() * 300000), clock - Math.floor(rand() * 120) * 864e5 - Math.floor(rand() * 20) * 36e5);
+  }
+  const settle = () => {
+    for (const r of rewards) {
+      const age = (clock - new Date(r.booked_at)) / 864e5;
+      if (r.status === "PENDING" && age >= HOLD_DAYS) r.status = "CONFIRMED";
+      if (r.status === "CONFIRMED" && age >= HOLD_DAYS + 15) r.status = "INVESTED"; // lote mensual a la gestora
+    }
+  };
+  rewards[3].status = "REVERSED"; rewards[3].user_amount_cents = 0;
+  settle();
+  return {
+    mode: "Demo",
+    user: { name: "Lucía (ejemplo)", email: "demo@futuroya.com" },
+    cards: [{ id: 1, brand: "VISA", last4: "4242", provider: "demo-banca-abierta", status: "ACTIVE" }],
+    account: { provider: "Gestora de ejemplo", external_account_id: "PP-DEMO0001" },
+    async summary() {
+      const s = { pending_cents: 0, confirmed_cents: 0, invested_cents: 0, rewards_count: 0 };
+      for (const r of rewards) {
+        if (r.status === "REVERSED") continue;
+        s.rewards_count++;
+        s[{ PENDING: "pending_cents", CONFIRMED: "confirmed_cents", INVESTED: "invested_cents" }[r.status]] += r.user_amount_cents;
+      }
+      s.total_cents = s.pending_cents + s.confirmed_cents + s.invested_cents;
+      return s;
+    },
+    async rewards() { return [...rewards].sort((a, b) => new Date(b.booked_at) - new Date(a.booked_at)); },
+    async merchants() {
+      return DEMO_MERCHANTS.map(m => ({ ...m, user_pct: m.user_bps / 100 })).sort((a, b) => b.user_pct - a.user_pct);
+    },
+    async simulatePurchase() {
+      const m = DEMO_MERCHANTS[Math.floor(rand() * DEMO_MERCHANTS.length)];
+      return addPurchase(m, 50000 + Math.floor(rand() * 200000), clock);
+    },
+    async advanceDays(days) { clock += days * 864e5; settle(); },
+    now: () => clock,
+  };
+}
+
+/* ---------- Modo API: misma interfaz contra el backend FastAPI (cuando se sirve desde /app) ---------- */
+function apiBackend(token) {
+  const call = async (path) => {
+    const r = await fetch(path, { headers: { Authorization: `Bearer ${token}` } });
+    if (!r.ok) throw new Error(`Error ${r.status} en ${path}`);
+    return r.json();
+  };
+  return {
+    mode: "API",
+    async load() {
+      this.user = await call("/me");
+      this.cards = await call("/me/cards");
+    },
+    account: { provider: "Gestora conectada", external_account_id: "—" },
+    summary: () => call("/me/summary"),
+    rewards: () => call("/me/rewards?limit=100"),
+    merchants: () => call("/merchants"),
+    now: () => Date.now(),
+  };
+}
+
+/* ---------- Estado de la interfaz ---------- */
+const state = { tab: "home", category: null, backend: null, sim: { monthly: 50000, years: 25, ret: 3 } };
+const $main = document.getElementById("main");
+const $tabs = document.getElementById("tabs");
+
+const ICONS = {
+  home: '<path d="M4 11.5 12 5l8 6.5V20H4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="14" r="2.2" fill="currentColor"/>',
+  shops: '<path d="M4 9h16l-1.2-4H5.2zM5 9v11h14V9M10 20v-5h4v5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>',
+  moves: '<path d="M5 7h14M5 12h14M5 17h9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+  future: '<path d="M4 19 9.5 13l3.5 3L20 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 7h5v5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+  profile: '<circle cx="12" cy="9" r="3.6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5 20c1.2-3.6 4-5 7-5s5.8 1.4 7 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+};
+const TABS = [["home", "Inicio"], ["shops", "Comercios"], ["moves", "Movimientos"], ["future", "Futuro"], ["profile", "Perfil"]];
+
+function renderTabs() {
+  $tabs.innerHTML = TABS.map(([id, label]) =>
+    `<button type="button" data-tab="${id}" ${state.tab === id ? 'aria-current="page"' : ""}><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[id]}</svg>${label}</button>`).join("");
+}
+$tabs.addEventListener("click", e => {
+  const b = e.target.closest("[data-tab]");
+  if (!b) return;
+  state.tab = b.dataset.tab;
+  try { localStorage.setItem("futuroya.tab", state.tab); } catch {}
+  render();
+});
+
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("show"), 2600);
+}
+
+const initials = name => name.replace(/[^A-Za-zÁÉÍÓÚÑáéíóúñ ]/g, "").split(" ").filter(Boolean).slice(0, 2).map(w => w[0]).join("").toUpperCase();
+const daysLeft = r => Math.max(0, Math.ceil(HOLD_DAYS - (state.backend.now() - new Date(r.booked_at)) / 864e5));
+
+function rewardItem(r) {
+  const sub = r.status === "PENDING" ? `${fmt(r.purchase_cents)} · firme en ${daysLeft(r)} d` : `${fmt(r.purchase_cents)} · ${dateFmt.format(new Date(r.booked_at))}`;
+  return `<div class="item"><span class="avatar" aria-hidden="true">${esc(initials(r.merchant))}</span>
+    <span class="txt"><span class="name">${esc(r.merchant)}</span><span class="sub num">${sub}</span></span>
+    <span class="amt"><span class="plus">${r.status === "REVERSED" ? fmt(0) : "+" + fmt(r.user_amount_cents)}</span><span class="pill ${r.status}">${STATUS[r.status]}</span></span></div>`;
+}
+
+/* ---------- Pantallas ---------- */
+async function screenHome() {
+  const b = state.backend;
+  const [s, rewards] = await Promise.all([b.summary(), b.rewards()]);
+  const monthStart = new Date(b.now()); monthStart.setDate(1); monthStart.setHours(0, 0, 0, 0);
+  const thisMonth = rewards.filter(r => new Date(r.booked_at) >= monthStart && r.status !== "REVERSED");
+  const monthCents = thisMonth.reduce((a, r) => a + r.user_amount_cents, 0);
+  const [whole, cents] = fmt(s.total_cents).split(".");
+  const part = v => Math.max(v, 0.0001);
+  return `<section class="screen">
+    <div class="vault">
+      <div class="coin-drop" id="coin"></div>
+      <span class="eyebrow">Tu hucha para la jubilación</span>
+      <div class="total">${whole}<small>.${cents}</small></div>
+      <span class="usd-big">≈ ${fmtUsd(s.total_cents)} · tasa C$ ${num(USD_RATE, 2)} por US$ 1</span>
+      <div class="bar" role="img" aria-label="Reparto del saldo por estado">
+        <span style="flex-grow:${part(s.invested_cents)};background:var(--on-pine)"></span>
+        <span style="flex-grow:${part(s.confirmed_cents)};background:var(--coin)"></span>
+        <span style="flex-grow:${part(s.pending_cents)};background:rgb(255 255 255 / .45)"></span>
+      </div>
+      <div class="legend">
+        <div><span><i class="dot" style="background:var(--on-pine)"></i>En tu plan</span><b>${fmt(s.invested_cents)}</b>${usdTag(s.invested_cents)}</div>
+        <div><span><i class="dot" style="background:var(--coin)"></i>Confirmado</span><b>${fmt(s.confirmed_cents)}</b>${usdTag(s.confirmed_cents)}</div>
+        <div><span><i class="dot" style="background:rgb(255 255 255 / .55)"></i>Pendiente</span><b>${fmt(s.pending_cents)}</b>${usdTag(s.pending_cents)}</div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat"><span class="eyebrow">Este mes</span><b>${fmt(monthCents)}</b><span class="muted" style="font-size:12px">${fmtUsd(monthCents)} · ${thisMonth.length} compras</span></div>
+      <div class="stat"><span class="eyebrow">Aportaciones</span><b>${s.rewards_count}</b><span class="muted" style="font-size:12px">desde el alta</span></div>
+    </div>
+    ${b.simulatePurchase ? `<div class="actions">
+      <button class="btn coin" type="button" id="buy">Simular una compra</button>
+      <button class="btn ghost" type="button" id="skip">Avanzar 30 días</button>
+    </div>` : ""}
+    <div class="row"><h2>Últimas aportaciones</h2><button class="chip" type="button" data-go="moves">Ver todas</button></div>
+    <div class="list">${rewards.slice(0, 4).map(rewardItem).join("") || '<p class="item muted">Aún no hay compras en comercios adheridos.</p>'}</div>
+  </section>`;
+}
+
+async function screenShops() {
+  const list = await state.backend.merchants();
+  const cats = [...new Set(list.map(m => m.category))];
+  const shown = state.category ? list.filter(m => m.category === state.category) : list;
+  return `<section class="screen">
+    <div><span class="eyebrow">Comercios adheridos</span><h1>Compra aquí y ahorra para mañana</h1></div>
+    <div class="chips" role="group" aria-label="Filtrar por categoría">
+      <button class="chip" type="button" data-cat="" aria-pressed="${!state.category}">Todos</button>
+      ${cats.map(c => `<button class="chip" type="button" data-cat="${esc(c)}" aria-pressed="${state.category === c}">${esc(c[0].toUpperCase() + c.slice(1))}</button>`).join("")}
+    </div>
+    <div class="list">${shown.map(m => `<button class="item" type="button" data-merchant="${m.id}">
+      <span class="avatar" aria-hidden="true">${esc(initials(m.name))}</span>
+      <span class="txt"><span class="name">${esc(m.name)}</span><span class="sub">${esc(m.address || m.locations?.[0]?.address || m.category)}</span></span>
+      <span class="amt"><span class="pct">${m.user_pct.toLocaleString("es-NI")} %</span><span class="sub muted" style="font-size:11px">para tu plan</span></span>
+    </button>`).join("")}</div>
+  </section>`;
+}
+
+async function screenMoves() {
+  const rewards = await state.backend.rewards();
+  return `<section class="screen">
+    <div><span class="eyebrow">Movimientos</span><h1>Cada compra, una aportación</h1></div>
+    <div class="note">
+      <b>Cómo avanza tu dinero</b>
+      <div class="steps">
+        <div><span class="pill PENDING">Pendiente</span>${HOLD_DAYS} días por si devuelves la compra</div>
+        <div><span class="pill CONFIRMED">Confirmada</span>El comercio paga su parte</div>
+        <div><span class="pill INVESTED">En tu plan</span>Enviada a la gestora en el lote mensual</div>
+      </div>
+    </div>
+    <div class="list">${rewards.map(rewardItem).join("")}</div>
+  </section>`;
+}
+
+function project(startCents, monthlyCents, years, retPct) {
+  const r = Math.pow(1 + retPct / 100, 1 / 12) - 1;
+  const pts = [{ y: 0, value: startCents, paid: startCents }];
+  let v = startCents;
+  for (let m = 1; m <= years * 12; m++) {
+    v = v * (1 + r) + monthlyCents;
+    if (m % 12 === 0) pts.push({ y: m / 12, value: v, paid: startCents + monthlyCents * m });
+  }
+  return pts;
+}
+
+function niceStep(max) {
+  const raw = max / 4, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  return [1, 2, 2.5, 5, 10].map(f => f * mag).find(s => s >= raw);
+}
+
+const axisLabel = c => c >= 100000 ? `C$ ${num(c / 100000, c % 100000 ? 1 : 0)} mil` : fmtShort(c);
+
+function chartSvg(pts) {
+  const W = 340, H = 190, L = 72, R = 12, T = 10, B = 24;
+  const maxV = Math.max(...pts.map(p => p.value), 1);
+  const step = niceStep(maxV), top = Math.ceil(maxV / step) * step;
+  const years = pts[pts.length - 1].y || 1;
+  const x = y => L + (y / years) * (W - L - R);
+  const yv = v => T + (1 - v / top) * (H - T - B);
+  const line = key => pts.map((p, i) => `${i ? "L" : "M"}${x(p.y).toFixed(1)},${yv(p[key]).toFixed(1)}`).join("");
+  const area = `${line("value")}L${x(years)},${yv(0)}L${x(0)},${yv(0)}Z`;
+  let grid = "";
+  for (let v = 0; v <= top + 1e-6; v += step) {
+    grid += `<line x1="${L}" x2="${W - R}" y1="${yv(v)}" y2="${yv(v)}" stroke="var(--line)" stroke-width="1"/>
+      <text x="${L - 6}" y="${yv(v) + 3}" text-anchor="end">${axisLabel(v)}</text>`;
+  }
+  const yStep = years <= 10 ? 2 : years <= 30 ? 5 : 10;
+  let xt = "";
+  for (let y = 0; y <= years; y += yStep) xt += `<text x="${x(y)}" y="${H - 6}" text-anchor="middle">${y}a</text>`;
+  const last = pts[pts.length - 1];
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Proyección del ahorro a ${years} años">
+    ${grid}${xt}
+    <path d="${area}" fill="var(--pine-soft)"/>
+    <path d="${line("value")}" fill="none" stroke="var(--pine)" stroke-width="2.4"/>
+    <path d="${line("paid")}" fill="none" stroke="var(--coin)" stroke-width="2" stroke-dasharray="5 4"/>
+    <circle cx="${x(last.y)}" cy="${yv(last.value)}" r="4.5" fill="var(--pine)" stroke="var(--surface)" stroke-width="2"/>
+  </svg>`;
+}
+
+async function screenFuture() {
+  const s = await state.backend.summary();
+  const { monthly, years, ret } = state.sim;
+  const pts = project(s.total_cents, monthly, years, ret);
+  const last = pts[pts.length - 1];
+  return `<section class="screen">
+    <div><span class="eyebrow">Simulador</span><h1>¿Cuánto tendrás al jubilarte?</h1></div>
+    <div class="chart">${chartSvg(pts)}
+      <div class="row" style="padding:6px 6px 0;font-size:12px" aria-hidden="true">
+        <span><i class="dot" style="background:var(--pine)"></i>Valor estimado</span>
+        <span><i class="dot" style="background:var(--coin)"></i>Lo aportado</span>
+      </div>
+    </div>
+    <div class="result">
+      <div class="stat"><span class="eyebrow">En ${years} años</span><b>${fmtShort(last.value)}</b>${usdTag(last.value, 0)}</div>
+      <div class="stat"><span class="eyebrow">Aportado</span><b>${fmtShort(last.paid)}</b>${usdTag(last.paid, 0)}</div>
+    </div>
+    <div class="field"><div class="row"><label for="sim-monthly">Aportación mensual por compras</label><output id="o-monthly" class="num">${fmtShort(monthly)} <span class="usd">(${fmtUsd(monthly)})</span></output></div>
+      <input type="range" id="sim-monthly" min="0" max="500000" step="5000" value="${monthly}"></div>
+    <div class="field"><div class="row"><label for="sim-years">Años hasta la jubilación</label><output class="num">${years}</output></div>
+      <input type="range" id="sim-years" min="5" max="45" step="1" value="${years}"></div>
+    <div class="field"><div class="row"><label for="sim-ret">Rentabilidad anual</label><output class="num">${ret.toLocaleString("es-NI")} %</output></div>
+      <input type="range" id="sim-ret" min="0" max="7" step="0.5" value="${ret}"></div>
+    <p class="muted" style="font-size:12.5px">Parte de tu saldo actual (${fmt(s.total_cents)} ≈ ${fmtUsd(s.total_cents)}). Dólares a tasa de C$ ${num(USD_RATE, 2)}. Es una estimación: la rentabilidad pasada no garantiza la futura.</p>
+  </section>`;
+}
+
+async function screenProfile() {
+  const b = state.backend;
+  const card = b.cards[0];
+  return `<section class="screen">
+    <div><span class="eyebrow">Perfil</span><h1>${esc(b.user.name)}</h1><p class="muted">${esc(b.user.email)}</p></div>
+    ${card ? `<div class="card-visual"><div class="row"><span class="eyebrow" style="color:inherit">Tarjeta vinculada</span><b>${esc(card.brand)}</b></div>
+      <span class="num">•••• •••• •••• ${esc(card.last4)}</span>
+      <span style="font-size:12px;opacity:.8">Leemos tus compras con tu permiso, solo en modo lectura. Nunca guardamos el número completo.</span></div>` : ""}
+    <div class="list">
+      <div class="item"><span class="avatar" aria-hidden="true">PP</span><span class="txt"><span class="name">Plan de ahorro para el retiro</span><span class="sub">${esc(b.account.provider)} · ${esc(b.account.external_account_id)}</span></span><span class="pill CONFIRMED">Activo</span></div>
+      <div class="item"><span class="avatar" aria-hidden="true">+</span><span class="txt"><span class="name">Vincular otra tarjeta</span><span class="sub">Los principales bancos de Nicaragua</span></span><span class="muted">›</span></div>
+      <div class="item"><span class="avatar" aria-hidden="true">R</span><span class="txt"><span class="name">Redondeo de compras</span><span class="sub">Próximamente</span></span><span class="muted">›</span></div>
+    </div>
+    ${b.mode === "Demo" ? `<div class="note"><b>Estás en el modo demo</b><span>Los datos son de ejemplo. Al servir este prototipo desde el backend (<span class="num">/app</span>) puedes entrar con una cuenta real.</span></div>`
+      : `<button class="btn ghost" type="button" id="logout">Cerrar sesión</button>`}
+  </section>`;
+}
+
+function merchantSheet(m) {
+  const wrap = document.createElement("div");
+  wrap.className = "sheet-wrap";
+  const ex = [50000, 100000, 250000];
+  wrap.innerHTML = `<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+    <div class="row"><div><span class="eyebrow">${esc(m.category)}</span><h1 id="sheet-title">${esc(m.name)}</h1></div><span class="pct" style="font-size:26px">${m.user_pct.toLocaleString("es-NI")} %</span></div>
+    <p class="muted">${esc(m.address || m.locations?.[0]?.address || "")}</p>
+    <div class="list">${ex.map(c => `<div class="item"><span class="avatar" aria-hidden="true">C$</span><span class="txt"><span class="name num">Compra de ${fmtShort(c)}</span><span class="sub num">${fmtUsd(c)} · con tu tarjeta vinculada</span></span><span class="amt"><span class="plus">+${fmt(Math.floor(c * m.user_pct / 100))}</span>${usdTag(Math.floor(c * m.user_pct / 100))}</span></div>`).join("")}</div>
+    <button class="btn" type="button" id="close-sheet">Entendido</button>
+  </div>`;
+  const close = () => wrap.remove();
+  wrap.addEventListener("click", e => { if (e.target === wrap || e.target.id === "close-sheet") close(); });
+  document.getElementById("phone").appendChild(wrap);
+  wrap.querySelector("#close-sheet").focus();
+}
+
+function loginScreen(error = "") {
+  return `<section class="screen">
+    <div><span class="eyebrow">Backend conectado</span><h1>Entra en tu hucha</h1><p class="muted">Usuario de ejemplo cargado con <span class="num">python -m app.seed</span>.</p></div>
+    <form id="login">
+      <label for="email">Email</label><input type="email" id="email" value="demo@futuroya.com" required>
+      <label for="password">Contraseña</label><input type="password" id="password" value="demo12345" required>
+      ${error ? `<p class="error">${esc(error)}</p>` : ""}
+      <button class="btn" type="submit">Entrar</button>
+      <button class="btn ghost" type="button" id="use-demo">Usar datos de ejemplo</button>
+    </form>
+  </section>`;
+}
+
+const SCREENS = { home: screenHome, shops: screenShops, moves: screenMoves, future: screenFuture, profile: screenProfile };
+
+async function render() {
+  renderTabs();
+  if (!state.backend) { $main.innerHTML = loginScreen(); return; }
+  try {
+    $main.innerHTML = await SCREENS[state.tab]();
+  } catch (err) {
+    $main.innerHTML = `<section class="screen"><h1>No se pudo cargar</h1><p class="error">${esc(err.message)}. Revisa que el backend esté en marcha y vuelve a intentarlo.</p></section>`;
+  }
+}
+
+$main.addEventListener("click", async e => {
+  const t = e.target.closest("button");
+  if (!t) return;
+  const b = state.backend;
+  if (t.dataset.go) { state.tab = t.dataset.go; render(); }
+  else if ("cat" in t.dataset) { state.category = t.dataset.cat || null; render(); }
+  else if (t.dataset.merchant) {
+    const m = (await b.merchants()).find(x => String(x.id) === t.dataset.merchant);
+    if (m) merchantSheet(m);
+  } else if (t.id === "buy") {
+    const r = await b.simulatePurchase();
+    await render();
+    document.getElementById("coin")?.classList.add("go");
+    toast(`+${fmt(r.user_amount_cents)} (${fmtUsd(r.user_amount_cents)}) para tu jubilación en ${r.merchant}`);
+  } else if (t.id === "skip") {
+    await b.advanceDays(30);
+    await render();
+    toast("Han pasado 30 días: las compras sin devolver ya son firmes");
+  } else if (t.id === "use-demo") {
+    start(demoBackend());
+  } else if (t.id === "logout") {
+    try { sessionStorage.removeItem("futuroya.token"); } catch {}
+    $main.innerHTML = loginScreen();
+  }
+});
+
+$main.addEventListener("input", e => {
+  const id = e.target.id;
+  if (!id.startsWith("sim-")) return;
+  const key = { "sim-monthly": "monthly", "sim-years": "years", "sim-ret": "ret" }[id];
+  state.sim[key] = Number(e.target.value);
+  clearTimeout(state.simT);
+  state.simT = setTimeout(async () => {
+    const focus = document.activeElement?.id;
+    await render();
+    if (focus) document.getElementById(focus)?.focus();
+  }, 60);
+});
+
+$main.addEventListener("submit", async e => {
+  if (e.target.id !== "login") return;
+  e.preventDefault();
+  try {
+    const r = await fetch("/auth/login", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: e.target.email.value, password: e.target.password.value }) });
+    if (!r.ok) throw new Error("Email o contraseña incorrectos");
+    const { token } = await r.json();
+    try { sessionStorage.setItem("futuroya.token", token); } catch {}
+    await startApi(token);
+  } catch (err) {
+    $main.innerHTML = loginScreen(err.message);
+  }
+});
+
+function start(backend) {
+  state.backend = backend;
+  document.getElementById("mode").textContent = backend.mode === "Demo" ? "Datos de ejemplo" : "Conectado";
+  render();
+}
+
+async function startApi(token) {
+  const b = apiBackend(token);
+  await b.load();
+  start(b);
+}
+
+(async function boot() {
+  try { state.tab = localStorage.getItem("futuroya.tab") || "home"; } catch {}
+  if (!SCREENS[state.tab]) state.tab = "home";
+  // Servido por el backend (/app/): intentamos usar la API real. En cualquier otro sitio, modo demo.
+  if (location.pathname.startsWith("/app")) {
+    try {
+      const health = await fetch("/health");
+      if (health.ok) {
+        let token = null;
+        try { token = sessionStorage.getItem("futuroya.token"); } catch {}
+        if (token) { try { await startApi(token); return; } catch {} }
+        renderTabs();
+        document.getElementById("mode").textContent = "Backend";
+        $main.innerHTML = loginScreen();
+        return;
+      }
+    } catch {}
+  }
+  start(demoBackend());
+})();
+</script>
